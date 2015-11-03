@@ -104,7 +104,7 @@
         }
 
         </style>
-        <t-header normal-heading label="Filter Results" on-tap="_revertChanges">
+        <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges" >
         </t-header>
         <div id="controller">
             <div class="heading layout horizontal center item-layout">
@@ -168,7 +168,7 @@
                 </div>
             </template>
         </div>
-        <iron-ajax id="call" url="{{filterApi}}" handleAs="json" on-response="_handleResponse" on-error="_handleError">
+        <iron-ajax id="call" url="{{filterApi}}"  headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
         </iron-ajax>
     </template>
 </dom-module>
@@ -230,7 +230,7 @@ Polymer({
         }
     },
 
-    ready: function() {
+    attached: function() {
         var demo = this;
         Polymer.dom(this.$.component).getDistributedNodes()[0];
         if (this.filterApi != '' && this.auto)
@@ -430,7 +430,10 @@ Polymer({
 
         this.appliedFilters = [];
         setTimeout(function() {
-            component.fire('filter-change', component.appliedFilters);
+            component.fire('filter-change', {
+                "filters": component.appliedFilters,
+                "count": component.cachedFilters.length
+            });
         }, 0);
     },
 
@@ -455,10 +458,7 @@ Polymer({
     _revertChanges: function(event) {
         var component = this;
         this.cachedFilters = this._interstitialFilters;
-        setTimeout(function() {
-            component.fire('filter-close');
-        }, 0);
-        event.stopPropagation();
+        component.fire('filter-close');
         return false;
     }
 
