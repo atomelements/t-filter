@@ -31,12 +31,12 @@
     "iron-icons": "PolymerElements/iron-icons#1.0.3",
     "iron-list": "PolymerElements/iron-list#1.1.0",
     "paper-item": "PolymerElements/paper-item#1.0.2",
-    "t-button": "atomproject/t-button#0.0.0",
-    "t-checkbox": "atomproject/t-checkbox#0.0.0",
-    "t-header": "atomproject/t-header#0.0.0",
-    "t-input": "atomproject/t-input#0.0.0",
-    "t-range": "atomproject/t-range#0.0.0",
-    "t-starrating": "atomproject/t-starrating#0.0.0", 
+    "t-button": "atomelements/t-button#0.0.0",
+    "t-checkbox": "atomelements/t-checkbox#0.0.0",
+    "t-header": "travelnxtElements/t-header#0.0.0",
+    "t-input": "atomelements/t-input#0.0.0",
+    "t-range": "atomelements/t-range#0.0.0",
+    "t-starrating": "travelnxtElements/t-starrating#0.0.0", 
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {
