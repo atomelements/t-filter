@@ -98,13 +98,12 @@
             width: 16px;
             height: 16px;
         }
-
-        .range-block{
-                padding: 10px;
+        
+        .range-block {
+            padding: 10px;
         }
-
         </style>
-        <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges" >
+        <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges">
         </t-header>
         <div id="controller">
             <div class="heading layout horizontal center item-layout">
@@ -159,16 +158,20 @@
                         </div>
                         <iron-collapse opened="[[opened]]" id="[[key.category]]">
                             <div class="filter-block">
-                                <div class="range-block"> 
-                                    <t-range data-category$="[[key.category]]" data-type$="[[key.type]]" data-label$="[[key.label]]" min="[[_getInt(key.items.0.value)]]" max="[[_getInt(key.items.1.value)]]" on-range-change="_rangeChanged"></t-range>
-                                </div>
+                                <template is="dom-repeat" items="[[key.items]]">
+                                    <template is="dom-if" if="[[_isEven(index)]]">
+                                        <div class="range-block">
+                                            <t-range data-category$="[[key.category]]" data-type$="[[key.type]]" data-label$="[[key.label]]" min="[[_getInt(items,index)]]" max="[[_getInt(items,index+1)]]" on-range-change="_rangeChanged"></t-range>
+                                        </div>
+                                    </template>
+                                </template>
                             </div>
                         </iron-collapse>
                     </template>
                 </div>
             </template>
         </div>
-        <iron-ajax id="call" url="{{filterApi}}"  headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
+        <iron-ajax id="call" url="{{filterApi}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
         </iron-ajax>
     </template>
 </dom-module>
@@ -185,9 +188,9 @@ Polymer({
             value: []
         },
 
-        auto:{
+        auto: {
             type: Boolean,
-            value:false
+            value: false
         },
 
         filterApi: {
@@ -237,7 +240,7 @@ Polymer({
             this.generateFilter();
     },
 
-    generateFilter: function () {
+    generateFilter: function() {
         this.$.call.generateRequest();
     },
 
@@ -447,8 +450,8 @@ Polymer({
         }
     },
 
-    _getInt: function(deci) {
-        return parseInt(deci);
+    _getInt: function(items, index) {
+        return parseInt(items[index].value);
     },
 
     _hideIfMax: function(item) {
