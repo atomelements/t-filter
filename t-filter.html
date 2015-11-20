@@ -473,7 +473,7 @@
                 return info.value === 'ticks';
             });
 
-            if (unit[0].value === 'ticks') {
+            if (unit.length >0 && unit[0].value === 'ticks') {
                 return this._convertedTime(range.value);
             }
 
