@@ -66,8 +66,8 @@
             border-bottom: 0;
         }
         
-        .heading a {
-            color: var(--default-primary-color, --base-color);
+        .resetLink {
+            color: var( --link-color,#147be1);
         }
         
         .filter-block {
@@ -107,7 +107,7 @@
         </t-header>
         <div id="controller">
             <div class="heading layout horizontal center item-layout">
-                <a on-click="_resetFilters">reset</a>
+                <a class="resetLink" on-click="_resetFilters">reset</a>
                 <span class="flex"></span>
                 <t-button label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
             </div>
