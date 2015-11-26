@@ -156,15 +156,15 @@
                             <div class="flex label">[[_getDisplayLabel(key)]]</div>
                             <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
                         </div>
-                        <iron-collapse opened="[[opened]]" id="Iron-collapse1">
+                        <iron-collapse opened="[[opened]]" id="[[key.category]]">
                             <div class="filter-block">
                                 <template is="dom-repeat" items="[[key.items]]" as="range" index-as="i">
                                     <template is="dom-if" if="[[_isEven(i)]]">
-                                        <t-range step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-label$="[[key.label]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged"></t-range>
+                                        <div class="range-block">
+                                            <t-range label="[[range.label]]" no-label="[[_hideLabel(range)]]" data-index$="[[i]]" step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged"></t-range>
+                                        </div>
                                     </template>
                                 </template>
-                                <div class="range-block">
-                                </div>
                             </div>
                         </iron-collapse>
                     </template>
@@ -241,7 +241,7 @@
         },
 
         _getMaxRange: function (items, index) {
-            var range = items[index+1];
+            var range = items[index + 1];
 
             return this._getRangeValue(range);
         },
@@ -272,6 +272,16 @@
                 }
             });
             return value;
+        },
+
+        _hideLabel: function (range) {
+            var type = this._getRangeType(range);
+            switch (type) {
+                case 'date':
+                    return false;
+                default:
+                    return true;
+            }
         },
 
         _getRangeType: function (range) {
@@ -347,7 +357,7 @@
                     this.push('cachedFilters', currentFilter);
                 } else {
                     this.cachedFilters = this.cachedFilters.filter(function (filter) {
-                        if (filter.category == currentFilter.category && filter.name == currentFilter.name)
+                        if (filter.category === currentFilter.category && filter.name === currentFilter.name)
                             return false;
                         return true;
                     });
@@ -371,19 +381,25 @@
         _rangeChanged: function (e) {
 
             var instance = e.model.item;
-            var category = e.currentTarget.getAttribute("data-category");
-            var type = e.currentTarget.getAttribute("data-type");
+            var target = e.currentTarget;
+            var category = target.getAttribute("data-category");
+            var group = target.getAttribute("data-group");
+            var subCategory = target.label;
+            var elementIndex = target.getAttribute('data-index');
+            var type = target.getAttribute("data-type");
 
             this.cachedFilters = this.cachedFilters.filter(function (instance) {
-                return instance.category != category;
+                var cIndex = instance.element.getAttribute('data-index');
+                return instance.category != category || elementIndex !== cIndex;
             });
 
             var currentFilter = {
                 "category": category,
-                "group": category,
+                "group": group,
+                "subgroup": subCategory,
                 "name": "Range",
-                "min": e.currentTarget.from,
-                "max": e.currentTarget.to,
+                "min": target.from,
+                "max": target.to,
                 "label": category,
                 "type": type
             };
@@ -475,7 +491,7 @@
                 case 'Range':
                     filters.push({
                         "category": filter.category,
-                        "group": filter.category,
+                        "group": filter.group,
                         "name": "Min",
                         "value": this._getRangePostValue(filter.element.rangeType, filter.min),
                         "label": filter.label
@@ -484,7 +500,7 @@
                         "category": filter.category,
                         "group": filter.category,
                         "name": "Max",
-                        "value": this._getRangePostValue(filter.element.rangeType,filter.max),
+                        "value": this._getRangePostValue(filter.element.rangeType, filter.max),
                         "label": filter.label
                     });
             }
@@ -493,11 +509,11 @@
         },
 
         _getRangePostValue: function (type, value) {
-            switch(type){
+            switch (type) {
                 default:
                     return value;
                 case 'date':
-                   return this._convertToTicks(value)
+                    return this._convertToTicks(value)
             }
         },
 
@@ -539,12 +555,17 @@
             switch (filter.type) {
                 case 'Options':
                     return filter.textLabel;
-                case 'Range':
-                    return filter.category + ": " + this._getFormattedValue(filter.min,filter.element.rangeType) + " - " + this._getFormattedValue(filter.max,filter.element.rangeType);
+                case 'Range': {
+                    var category = filter.category;
+                    if (filter.element.rangeType === 'date') {
+                        category = category +  '(' +filter.subgroup + ") :";
+                    }
+                    return category + ' '+ this._getFormattedValue(filter.min, filter.element.rangeType) + " - " + this._getFormattedValue(filter.max, filter.element.rangeType);
+                }
             }
         },
 
-        _getFormattedValue: function (value,type) {
+        _getFormattedValue: function (value, type) {
             switch (type) {
                 case 'number':
                     return parseInt(value);
