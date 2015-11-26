@@ -268,7 +268,7 @@
             var value = range.value;
             range.additionalInfo.forEach(function (r) {
                 if (r.key.toLowerCase() === 'unit' && r.value.toLowerCase() === 'ticks') {
-                    value = filter._convertedTime(range.value);
+                    value = filter._convertToTime(range.value);
                 }
             });
             return value;
@@ -309,7 +309,7 @@
             this.$.controller.textContent = "No configuration found.";
         },
 
-        _convertedTime: function (epochTime) {
+        _convertToTime: function (epochTime) {
 
             var epochTicks = 621355968000000000; // the number of .net ticks at the unix epoch
             var ticksPerMillisecond = 10000; // there are 10000 .net ticks per millisecond
@@ -323,6 +323,7 @@
         },
 
         _convertToTicks: function (time) {
+
             return ((time * 10000) + 621355968000000000);
         },
 
@@ -518,16 +519,18 @@
         },
 
         _formatDate: function (value) {
-            value = new Date(parseInt(value));
+            var cDate = new Date();
+            cDate.setTime(value);
+            var date = new Date(cDate.getTime() + (cDate.getTimezoneOffset() * 60000));
             var formattedTime = '';
-            if (value.getHours() < 10) {
+            if (date.getHours() < 10) {
                 formattedTime = '0' + formattedTime;
             }
-            formattedTime = formattedTime + value.getHours() + ':';
-            if (value.getMinutes() < 10) {
+            formattedTime = formattedTime + date.getHours() + ':';
+            if (date.getMinutes() < 10) {
                 formattedTime = formattedTime + '0';
             }
-            formattedTime = formattedTime + value.getMinutes();
+            formattedTime = formattedTime + date.getMinutes();
             return formattedTime;
         },
 
