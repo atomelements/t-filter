@@ -334,7 +334,13 @@
 
         _convertToTicks: function (time) {
 
-            return ((time * 10000) + 621355968000000000);
+            var localtzDateTime = new Date(parseInt(time));
+            var standardDateTime = new Date(localtzDateTime.getTime() - (localtzDateTime.getTimezoneOffset() * 60000));
+
+            var cTime = standardDateTime.getTime() * 10000;
+
+            var epochTicks = 621355968000000000; // the number of .net ticks at the unix epoch               
+            return (cTime + epochTicks);
         },
 
         _checkChanged: function (e) {
@@ -534,14 +540,9 @@
             }, 0);
         },
 
-        _formatDate: function (value) {
-            var epochTime =((time * 10000) + 621355968000000000);
-            var epochTicks = 621355968000000000; // the number of .net ticks at the unix epoch
-            var ticksPerMillisecond = 10000; // there are 10000 .net ticks per millisecond
-
-            var dateTime = (epochTime - epochTicks) / ticksPerMillisecond;
-            var date = new Date();
-            date.setTime(dateTime);
+        _formatDate: function (time) {
+        
+            var date = new Date(parseInt(time));
             var formattedTime = '';
             if (date.getHours() < 10) {
                 formattedTime = '0' + formattedTime;
