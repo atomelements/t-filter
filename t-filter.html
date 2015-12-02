@@ -128,16 +128,20 @@
                 <div class="layout">
                     <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
                         <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
-                            <div class="flex label">[[key.category]]</div>
+                            <div class="flex label">[[key.label]]</div>
                             <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
                         </div>
                         <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
                             <div class="filter-block">
                                 <template is="dom-if" if="[[_isNotRating(key.category)]]">
                                     <template is="dom-repeat" items="[[key.items]]" as="item">
-                                        <div class="layout item-layout justified style-scope t-component-panel">
+                                    <div class="layout horizontal">
+                                        
+                                        <div class="layout flex item-layout justified style-scope t-component-panel">
                                             <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
                                         </div>
+                                        <div>test</div>
+                                    </div>
                                     </template>
                                 </template>
                                 <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
@@ -468,9 +472,9 @@ Polymer({
 
     _getDisplayLabel: function(key) {
         if (key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
-            return key.category + ' (' + key.items[0].additionalInfo[0].value + ')';
+            return key.label + ' (' + key.items[0].additionalInfo[0].value + ')';
         }
-        return key.category;
+        return key.label;
     },
 
     _applyFilters: function() {
