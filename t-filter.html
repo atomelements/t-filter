@@ -45,7 +45,7 @@
         
         #controller {
             padding: 10px;
-            padding-bottom:20px;
+            padding-bottom: 20px;
         }
         
         #controller > * {
@@ -183,7 +183,10 @@ Polymer({
 
     properties: {
 
-        showTwelveHourClock:{type:Boolean, value:false},
+        showTwelveHourClock: {
+            type: Boolean,
+            value: false
+        },
 
         response: {
             type: Array,
@@ -547,17 +550,42 @@ Polymer({
     _formatDate: function(time) {
 
         var date = new Date(parseInt(time));
+        var day = date.toDateString().substr(0, 3);
+        return day + ', ' + this._getTime(date);
+    },
+
+    _getTime: function(date) {
         var formattedTime = '';
-        if (date.getHours() < 10) {
-            formattedTime = '0' + formattedTime;
+        var hours = date.getHours();
+        if (hours < 10) {
+            if (hours === 0 && this.showTwelveHourClock)
+                formattedTime = '12';
+            else
+                formattedTime = '0' + formattedTime + hours;
+        } else {
+            if (hours > 12 && this.showTwelveHourClock) {
+                hours = hours - 12;
+                formattedTime = hours.toString();
+            } else {
+                formattedTime = formattedTime + hours;
+            }
         }
-        formattedTime = formattedTime + date.getHours() + ':';
+        formattedTime = formattedTime + ':';
         if (date.getMinutes() < 10) {
             formattedTime = formattedTime + '0';
         }
         formattedTime = formattedTime + date.getMinutes();
+        if (this.showTwelveHourClock) {
+
+            if (date.getHours() >= 12)
+                formattedTime = formattedTime + " pm";
+            else
+                formattedTime = formattedTime + " am";
+        }
+
         return formattedTime;
     },
+
 
     _getChip: function(item, index) {
         var filter = this.cachedFilters[index];
