@@ -137,10 +137,10 @@
                                     <template is="dom-repeat" items="[[key.items]]" as="item">
                                     <div class="layout horizontal">
                                         
-                                        <div class="layout flex item-layout justified style-scope t-component-panel">
+                                        <div class="layout  flex item-layout justified style-scope t-component-panel">
                                             <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
                                         </div>
-                                        <div>test</div>
+                                        <div>[[item.displayValue]]</div>
                                     </div>
                                     </template>
                                 </template>
