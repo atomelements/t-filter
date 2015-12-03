@@ -1,4 +1,3 @@
-<!-- We are still creating this components -->
 <link rel="import" href="../polymer/polymer.html" />
 <link rel="import" href="../t-input/t-input.html" />
 <link rel="import" href="../t-button/t-button.html" />
@@ -42,15 +41,17 @@
             display: block;
             color: var(--grey-six, #333333);
         }
-        
-        #controller {
-            padding: 10px;
-            padding-bottom: 20px;
+        .mainBody {
+            height:100vh;
         }
-        
-        #controller > * {
+        .scrollsection {
+            overflow:auto;
+        }
+        .scrollsection > .item,
+        #controller .heading {
             border-bottom: 1px solid;
             border-color: var(--grey-two, #eeeeee);
+            padding:10px;
         }
         
         #controller .category {
@@ -61,11 +62,6 @@
             color: var(--grey-three, #bbbbbb);
         }
         
-        #controller .heading {
-            margin-top: 0;
-            margin-bottom: 10px;
-            border-bottom: 0;
-        }
         
         .heading a {
             color: var(--default-primary-color, --base-color);
@@ -104,14 +100,16 @@
             padding: 10px;
         }
         </style>
-        <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges">
-        </t-header>
-        <div id="controller">
+        <div class="layout vertical mainBody">
+            <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges">
+            </t-header>
+            <div id="controller" class="layout vertical flex">
              <div class="heading layout horizontal center item-layout">
                 <a on-click="_resetFilters">reset</a>
                 <span class="flex"></span>
                 <t-button label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
             </div>
+             <div class="flex scrollsection">
             <div class="chips layout vertical flex">
                 <iron-list id="chips" items="[[cachedFilters]]" style="width:100%">
                     <template>
@@ -125,10 +123,10 @@
                 </iron-list>
             </div>
             <template is="dom-repeat" items="{{response}}" as="key">
-                <div class="layout">
+                <div class="layout item">
                     <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
                         <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
-                            <div class="flex label">[[key.displayLabel]]</div>
+                            <div class="flex label">[[key.label]]</div>
                             <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
                         </div>
                         <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
@@ -175,6 +173,8 @@
                     </template>
                 </div>
             </template>
+            </div>
+            </div>
         </div>
         <iron-ajax id="call" url="{{filterApi}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
         </iron-ajax>
