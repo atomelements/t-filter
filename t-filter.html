@@ -126,7 +126,7 @@
                 <div class="layout item">
                     <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
                         <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
-                            <div class="flex label">[[key.displayLabel]]</div>
+                            <div class="flex label">[[key.label]]</div>
                             <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
                         </div>
                         <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
