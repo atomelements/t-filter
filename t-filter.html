@@ -99,6 +99,25 @@
         .range-block {
             padding: 10px;
         }
+        t-checkbox{
+            width: 100%;
+        }
+        .font-12{
+            font-size: var(--font-12, 12px);
+        }
+        t-starrating ::content paper-icon-button{
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            position: static;
+            margin: 0;
+            line-height: normal;
+        }
+         t-starrating ::content .t-starrating-wrapper > span {
+            width: auto;
+            vertical-align: super;
+            font-size: 0;
+        }
         </style>
         <div class="layout vertical mainBody">
             <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges">
@@ -146,7 +165,10 @@
                                     <template is="dom-repeat" items="[[key.items]]" as="item">
                                         <div class="layout item-layout justified style-scope t-component-panel">
                                             <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
-                                                <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>[[item.displayValue]]
+                                                <div class="layout horizontal center font-12 justified">
+                                                    <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
+                                                    <div>[[item.displayValue]]</div>
+                                                </div>
                                             </t-checkbox>
                                         </div>
                                     </template>
