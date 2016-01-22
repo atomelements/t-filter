@@ -740,6 +740,14 @@ Polymer({
         component.fire('filter-open');
     },
 
+    _showHeader: function(){
+        this.$.filteredRatio.hidden = false;
+    },
+
+    _hideHeader: function(){
+        this.$.filteredRatio.hidden = true;
+    },
+
     _getFilteredRatio: function (pagingInfo) {
         if (pagingInfo != undefined)
             return pagingInfo.filteredCount + "/" + pagingInfo.total;
