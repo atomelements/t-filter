@@ -167,18 +167,16 @@
                     </div>
                     <div class="flex scrollsection">
                         <div class="chips layout vertical flex">
-                            <iron-list id="chips" items="[[cachedFilters]]" style="width:100%">
-                                <template>
-                                    <template is="dom-if" if="[[!item.hide]]">
-                                        <div class="chip horizontal layout">
-                                            <div class="flex value">
-                                                <span>{{_getChip(item,index)}}</span>
-                                            </div>
-                                            <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
+                            <template is="dom-repeat" items="[[cachedFilters]]">                                
+                                <template is="dom-if" if="[[!item.hide]]">
+                                    <div class="chip horizontal layout">
+                                        <div class="flex value">
+                                            <span>{{_getChip(item,index)}}</span>
                                         </div>
-                                    </template>
-                                </template>
-                            </iron-list>
+                                        <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
+                                    </div>
+                                </template>                            
+                            </template>
                         </div>
                         <template is="dom-repeat" items="{{response}}" as="key">                            
                             <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
@@ -570,8 +568,7 @@ Polymer({
         this.cachedFilters.forEach(function(filter) {
             filters = filters.concat(component._getAppliedFilter(filter));
         });
-        this.appliedFilters = filters;
-        this.$.chips.fire('resize');
+        this.appliedFilters = filters;        
         setTimeout(function() {
             component.$$('#filterModal').hidden = true;
             component.fire('filter-change', {
@@ -640,8 +637,7 @@ Polymer({
             component._resetElement(cache.element, cache.name);
         });
         this.cachedFilters = [];
-        this.$.chips.fire('resize');
-
+        
         this.appliedFilters = [];
         setTimeout(function() {
             component.fire('filter-change', {
@@ -740,7 +736,6 @@ Polymer({
         var component = this;
         //this.$$('#filteredRatio').hidden = true;
         this.$$('#filterModal').hidden = false;
-        this.$.chips.fire('resize');
         component.fire('filter-open');
     },
 
