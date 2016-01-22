@@ -747,18 +747,20 @@ Polymer({
             return pagingInfo.filteredCount + "/" + pagingInfo.total;
     },
 
-    _getFilterCount: function (count) {        
+    _getFilterCount: function (count) { 
+        var _filterCount;
         switch (count) {
             case 0:
-                this._filterCount = "";
+                _filterCount = "";
                 break;
             case 1:
-                this._filterCount = count + " filter applied";
+                _filterCount = count + " filter applied";
                 break;
             default:
-                this._filterCount = count + " filters applied";
+                _filterCount = count + " filters applied";
 
         }
+        return _filterCount;
     },
 
     findSearchFilter: function(response){
