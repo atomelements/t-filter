@@ -311,7 +311,12 @@ Polymer({
         _searchFilter: {
           type: Object,
           computed: 'findSearchFilter(response)'
-        } 
+        },
+
+        _searchFilterTimer:  {
+            type: Number,
+            value: -1
+        }
     },
 
     attached: function() {
@@ -790,13 +795,16 @@ Polymer({
         };
         this.push('cachedFilters', currentFilter);
         
-        // if(this.searchFilterTimer){
-        //     clearTimeout(this.searchFilterTimer);
+        // if(this._searchFilterTimer){
+        //     clearTimeout(this._searchFilterTimer);
         // }
 
-        this.searchFilterTimer = setTimeout(function() {
-            component._applyFilters();
-        }, 750);        
+        if(this._searchFilterTimer == -1){
+            this._searchFilterTimer = setTimeout(function() {
+                component._applyFilters();
+                component._searchFilterTimer = -1;                
+            }, 750);        
+        }        
     },
 
     _removeSearchFilter: function(){
