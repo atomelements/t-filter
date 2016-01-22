@@ -169,12 +169,14 @@
                         <div class="chips layout vertical flex">
                             <iron-list id="chips" items="[[cachedFilters]]" style="width:100%">
                                 <template>
-                                    <div class="chip horizontal layout">
-                                        <div class="flex value">
-                                            <span>{{_getChip(item,index)}}</span>
+                                    <template is="dom-if" if="[[!item.hide]]">
+                                        <div class="chip horizontal layout">
+                                            <div class="flex value">
+                                                <span>{{_getChip(item,index)}}</span>
+                                            </div>
+                                            <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
                                         </div>
-                                        <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
-                                    </div>
+                                    </template>
                                 </template>
                             </iron-list>
                         </div>
@@ -776,7 +778,12 @@ Polymer({
     },
 
     _searchValChanged: function(newValue, oldValue){  
+        //on load scenario
         if((!newValue && !oldValue) || !this._searchFilter)    
+            return;
+
+        //empty space handling not fire api call
+        if(newValue && oldValue && newValue.trim() == oldValue.trim())
             return;
 
         var component = this;      
@@ -793,7 +800,8 @@ Polymer({
             "name": this._searchFilter.items[0].name,
             "label": this._searchFilter.items[0].label,
             "type": this._searchFilter.type,
-            'element': this.$.searchInput
+            'element': this.$.searchInput,
+            'hide': true
         };
         this.push('cachedFilters', currentFilter);
         
@@ -805,7 +813,7 @@ Polymer({
             this._searchFilterTimer = setTimeout(function() {
                 component._applyFilters();
                 component._searchFilterTimer = -1;                
-            }, 750);        
+            }, 500);        
         }        
     },
 
