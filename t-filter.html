@@ -634,16 +634,17 @@ Polymer({
     _resetFilters: function() {
         var component = this;
         this.cachedFilters.forEach(function(cache) {
-            component._resetElement(cache.element, cache.name);
+            if(!(component._searchFilter && cache.category == component._searchFilter.category)){
+                component._resetElement(cache.element, cache.name);
+            }
         });
-        this.cachedFilters = [];
-        
-        this.appliedFilters = [];
+        this.cachedFilters = this.cachedFilters.filter(function(filter, index) {
+            if (component._searchFilter && filter.category == component._searchFilter.category)
+                return true;
+            return false;
+        });
         setTimeout(function() {
-            component.fire('filter-change', {
-                "filters": component.appliedFilters,
-                "count": component.cachedFilters.length
-            });
+            component._applyFilters();
         }, 0);
     },
 
