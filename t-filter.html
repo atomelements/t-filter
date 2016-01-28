@@ -151,7 +151,7 @@
             <span class="flex"></span>
             <span>{{_getFilterCount(cachedFilters.length)}}</span>
             <div hidden="[[!_searchFilter]]">
-                <t-input id="searchInput" class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}"></t-input>
+                <t-input id="searchInput" class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}" type="search" on-keyup="searchSubmit" ></t-input>
                 <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" hidden$="[[!searchVal]]"></iron-icon>
             </div>
         </div>
@@ -830,6 +830,14 @@ Polymer({
             })
         }});
         
+    },
+    searchSubmit: function(e){
+        if(e.keyCode == 13){
+            //code to hide mobile keypad 
+            if(document.activeElement) {
+                document.activeElement.blur();
+            } 
+        }
     }
 })
 </script>
