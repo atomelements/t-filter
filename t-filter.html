@@ -192,8 +192,13 @@
                                                     <div class="layout horizontal">
                                                         <div class="layout  flex item-layout justified style-scope t-component-panel">
                                                             <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
+                                                            <template is="dom-if" if="[[!item.displayValue]]">
+                                                                [[_getCountValue(item.additionalInfo)]]
+                                                            </template>
                                                         </div>
-                                                        <div>[[item.displayValue]]</div>
+                                                        <template is="dom-if" if="[[item.displayValue]]">
+                                                            <div>[[item.displayValue]]</div>
+                                                        </template>
                                                     </div>
                                                 </template>
                                             </template>
@@ -838,6 +843,20 @@ Polymer({
                 document.activeElement.blur();
             } 
         }
+    },
+
+    _getCountValue: function(items){
+        if(!items || !items.length)
+            return '';
+
+        var count = '';
+        items.forEach(function(data){
+            if(data.key && data.key == 'Count'){
+                count = '(' + data.value + ')';
+            }
+        });
+
+        return count;
     }
 })
 </script>
