@@ -224,7 +224,7 @@
                                             <template is="dom-repeat" items="[[key.items]]" as="range" index-as="i">
                                                 <template is="dom-if" if="[[_isEven(i)]]">
                                                     <div class="range-block">
-                                                        <t-range show-twelve-hour-clock="[[showTwelveHourClock]]" label="[[range.label]]" no-label="[[_hideLabel(range)]]" data-index$="[[i]]" step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged"></t-range>
+                                                        <t-range show-twelve-hour-clock="[[showTwelveHourClock]]" label="[[range.label]]" no-label="[[_hideLabel(range)]]" data-index$="[[i]]" step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged" margin="1"></t-range>
                                                     </div>
                                                 </template>
                                             </template>
