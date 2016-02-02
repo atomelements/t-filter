@@ -46,9 +46,6 @@
             height: 100vh;
         }
         
-        .scrollsection {
-            overflow: auto;
-        }
         
         .scrollsection > .item,
         #controller .heading {
@@ -141,19 +138,63 @@
             background-color: black;
             color: white;
         }
+        #filteredRatio{
+            padding: 10px;
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+            position: relative;
+            overflow: hidden;
+        }
+        #searchBox{
+            position: absolute;
+            background: #fff;
+            transition: 0.3s ease left;
+            padding: 0 10px;
+            width: 100%;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        #searchBox.active{
+            left: 0;
+        }
+        #searchBox-loader{
+            width: 14px;
+            height: 14px;
+        }
+        .scrollsection {
+            overflow: auto;
+        }
+        /* Patch to show scroll on scroll section */
+        #controller {
+            overflow: hidden;
+        }
         </style>
-        <div class=" layout horizontal center filter-block" id="filteredRatio">
-            <iron-icon icon="filter-list" on-click="_openModal"></iron-icon>
-            <span class="total-results">
-            <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
-            <span>results</span>
-            </span>
-            <span class="flex"></span>
-            <span>{{_getFilterCount(cachedFilters.length)}}</span>
-            <div hidden="[[!_searchFilter]]">
-                <t-input id="searchInput" class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}" type="search" on-keyup="searchSubmit" ></t-input>
-                <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" hidden$="[[!searchVal]]"></iron-icon>
+        <div class=" layout horizontal center" id="filteredRatio">
+            <div class="flex">
+                <iron-icon icon="filter-list" on-click="_openModal"></iron-icon>
+                <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
+                    <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
+                    <span>results</span>
+                </span>
             </div>
+            <!-- <span>{{_getFilterCount(cachedFilters.length)}}</span> -->
+            <template is="dom-if" if="[[_searchFilter]]">
+                <div class="searchBox-content">
+                    <span class="flex">[[searchVal]]</span>
+                    <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" ></iron-icon>
+                    <iron-icon class="icon" on-click="_toggleSearchBox" icon="search"></iron-icon>
+                </div>
+                <div class="layout horizontal center" id="searchBox">
+                    <t-input id="searchInput" no-label-float class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
+                    <span  hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
+                    <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
+                    <iron-icon class="icon" on-click="_removeSearchFilter" icon="close"></iron-icon>
+                </div>
+            </template>
         </div>
         <div class="modal layout vertical" id="filterModal" hidden>
             <div class="layout vertical mainBody">
@@ -323,9 +364,13 @@ Polymer({
             value: -1
         }
     },
+    observers: [
+        '_onResultsResponse(resultsPagingInfo)',
+        '_addListenerBlur(_searchFilter)'
+    ],
 
     attached: function() {
-        var demo = this;
+        var component = this;
         Polymer.dom(this.$.component).getDistributedNodes()[0];
         if (this.filterApi != '' && this.auto)
             this.generateFilter();
@@ -757,8 +802,8 @@ Polymer({
         if (pagingInfo != undefined)
             return pagingInfo.filteredCount + "/" + pagingInfo.total;
     },
-
-    _getFilterCount: function (count) { 
+    /*This functionality is removed for now*/
+   /* _getFilterCount: function (count) { 
         var _filterCount;
         switch (count) {
             case 0:
@@ -772,7 +817,7 @@ Polymer({
 
         }
         return _filterCount;
-    },
+    },*/
 
     findSearchFilter: function(response){
         var searchFilter = null;
@@ -797,6 +842,8 @@ Polymer({
 
         var component = this;      
 
+        this._loadingResultsSearchBox = false;
+
         this.cachedFilters = this.cachedFilters.filter(function(filter, index) {
             if (filter.category == component._searchFilter.category)
                 return false;
@@ -809,7 +856,7 @@ Polymer({
             "name": this._searchFilter.items[0].name,
             "label": this._searchFilter.items[0].label,
             "type": this._searchFilter.type,
-            'element': this.$.searchInput,
+            'element': this.$$('#searchInput'),
             'hide': true
         };
         this.push('cachedFilters', currentFilter);
@@ -828,7 +875,7 @@ Polymer({
 
     _removeSearchFilter: function(){
         var component = this;
-        this._removeFilter({model: {item: this.cachedFilters.find(function(filter, index) {
+        component._removeFilter({model: {item: component.cachedFilters.find(function(filter, index) {
                 if (filter.category == component._searchFilter.category)
                     return true;
                 return false;
@@ -857,6 +904,31 @@ Polymer({
         });
 
         return count;
+    },
+    _addListenerBlur: function(){
+        if(this._searchFilter){
+            var component = this;
+            setTimeout(function(){
+                component.$$('#searchInput').querySelector('input').addEventListener('blur',function(){
+                    alert(1);
+                    component._toggleSearchBox();
+                });
+            },100);
+        }
+    },
+
+    _onResultsResponse: function(){
+        this._loadingResultsSearchBox = true;
+
+    },
+
+    _toggleSearchBox: function(){
+        if(this.$$('#searchBox').classList.contains('active')){
+            this.$$('#searchBox').classList.remove('active');
+        }else{
+            this.$$('#searchBox').classList.add('active');
+            this.$$('#searchInput').querySelector('input').focus();
+        }
     }
 })
 </script>
