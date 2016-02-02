@@ -172,9 +172,18 @@
         #controller {
             overflow: hidden;
         }
+        .searchBox-content{
+            width: 50%;
+        }
+        .searchBox-content-ellipsis{
+            white-space: nowrap;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
         </style>
-        <div class=" layout horizontal center" id="filteredRatio">
-            <div class="flex">
+        <div class="layout horizontal" id="filteredRatio">
+            <div class="flex layout horizontal center">
                 <iron-icon icon="filter-list" on-click="_openModal"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
                     <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
@@ -183,8 +192,8 @@
             </div>
             <!-- <span>{{_getFilterCount(cachedFilters.length)}}</span> -->
             <template is="dom-if" if="[[_searchFilter]]">
-                <div class="searchBox-content">
-                    <span class="flex">[[searchVal]]</span>
+                <div class="searchBox-content layout horizontal center">
+                    <span on-click="_toggleSearchBox"  class="flex searchBox-content-ellipsis">[[searchVal]]</span>
                     <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" ></iron-icon>
                     <iron-icon class="icon" on-click="_toggleSearchBox" icon="search"></iron-icon>
                 </div>
