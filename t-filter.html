@@ -46,7 +46,6 @@
             height: 100vh;
         }
         
-        
         .scrollsection > .item,
         #controller .heading {
             border-bottom: 1px solid;
@@ -121,7 +120,7 @@
             vertical-align: super;
             font-size: 0;
         }
-
+        
         .modal {
             position: fixed;
             top: 0;
@@ -138,48 +137,72 @@
             background-color: black;
             color: white;
         }
-        #filteredRatio{
+        
+        #filteredRatio {
             padding: 10px;
             border-bottom: 1px solid;
             border-color: var(--grey-two, #eeeeee);
             position: relative;
             overflow: hidden;
         }
-        #searchBox{
+        
+        #searchBox {
             position: absolute;
             background: #fff;
+            z-index: 1;
             transition: 0.3s ease left;
             padding: 0 10px;
             width: 100%;
             left: 100%;
             top: 50%;
+            height: 100%;
             transform: translateY(-50%);
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
-            box-sizing: border-box;
+            box-sizing: border-box;    
+            -moz-box-shadow: inset 0 0 5px #000000;
+            -webkit-box-shadow: inset 0 0 5px #000000;
+            box-shadow: inset 0 0 4px #000000;
         }
-        #searchBox.active{
+        
+        #searchBox ::content input{
+            border: 0!important;
+        }
+        #searchBox.active {
             left: 0;
         }
-        #searchBox-loader{
+        
+        #searchBox-loader {
             width: 14px;
             height: 14px;
         }
+        
         .scrollsection {
             overflow: auto;
         }
         /* Patch to show scroll on scroll section */
+        
         #controller {
             overflow: hidden;
         }
-        .searchBox-content{
+        
+        .searchBox-content {
             width: 50%;
         }
-        .searchBox-content-ellipsis{
+        
+        .searchBox-content-ellipsis {
+            text-align: right;
             white-space: nowrap;
             overflow: hidden;
             -ms-text-overflow: ellipsis;
             text-overflow: ellipsis;
+        }
+        
+        .devider {
+            width: 2px;
+            height: 20px;
+            margin: 0px 5px 0 10px;
+            background: #bbbbbb;
         }
         </style>
         <div class="layout horizontal" id="filteredRatio">
@@ -187,20 +210,22 @@
                 <iron-icon icon="filter-list" on-click="_openModal"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
                     <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
-                    <span>results</span>
+                <span>results</span>
                 </span>
             </div>
             <!-- <span>{{_getFilterCount(cachedFilters.length)}}</span> -->
             <template is="dom-if" if="[[_searchFilter]]">
                 <div class="searchBox-content layout horizontal center">
-                    <span on-click="_toggleSearchBox"  class="flex searchBox-content-ellipsis">[[searchVal]]</span>
-                    <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" ></iron-icon>
-                    <iron-icon class="icon" on-click="_toggleSearchBox" icon="search"></iron-icon>
+                    <span on-click="_toggleSearchBox" class="flex searchBox-content-ellipsis">[[searchVal]]</span>
+                    <span class="devider"></span>
+                    <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" hidden$="[[!searchVal]]"></iron-icon>
+                    <iron-icon class="icon" on-click="_toggleSearchBox" icon="search" hidden$="[[searchVal]]"></iron-icon>
                 </div>
                 <div class="layout horizontal center" id="searchBox">
                     <t-input id="searchInput" no-label-float class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
-                    <span  hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
+                    <span hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
                     <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
+                    <span class="devider"></span>
                     <iron-icon class="icon" on-click="_removeSearchFilter" icon="close"></iron-icon>
                 </div>
             </template>
@@ -217,7 +242,7 @@
                     </div>
                     <div class="flex scrollsection">
                         <div class="chips layout vertical flex">
-                            <template is="dom-repeat" items="[[cachedFilters]]">                                
+                            <template is="dom-repeat" items="[[cachedFilters]]">
                                 <template is="dom-if" if="[[!item.hide]]">
                                     <div class="chip horizontal layout">
                                         <div class="flex value">
@@ -225,10 +250,10 @@
                                         </div>
                                         <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
                                     </div>
-                                </template>                            
+                                </template>
                             </template>
                         </div>
-                        <template is="dom-repeat" items="{{response}}" as="key">                            
+                        <template is="dom-repeat" items="{{response}}" as="key">
                             <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
@@ -264,7 +289,7 @@
                                                     </div>
                                                 </template>
                                             </template>
-                                        </div>                                    
+                                        </div>
                                     </iron-collapse>
                                 </div>
                             </template>
@@ -286,7 +311,7 @@
                                         </div>
                                     </iron-collapse>
                                 </div>
-                            </template>                            
+                            </template>
                         </template>
                     </div>
                 </div>
@@ -364,11 +389,11 @@ Polymer({
         },
 
         _searchFilter: {
-          type: Object,
-          computed: 'findSearchFilter(response)'
+            type: Object,
+            computed: 'findSearchFilter(response)'
         },
 
-        _searchFilterTimer:  {
+        _searchFilterTimer: {
             type: Number,
             value: -1
         }
@@ -594,7 +619,7 @@ Polymer({
 
                 break;
             case 't-input':
-                element.value= '';
+                element.value = '';
                 break;
         }
     },
@@ -627,14 +652,14 @@ Polymer({
         this.cachedFilters.forEach(function(filter) {
             filters = filters.concat(component._getAppliedFilter(filter));
         });
-        this.appliedFilters = filters;        
+        this.appliedFilters = filters;
         setTimeout(function() {
             component.$$('#filterModal').hidden = true;
             component.fire('filter-change', {
                 "filters": component.appliedFilters,
                 "count": component.cachedFilters.length
             });
-        }, 0);        
+        }, 0);
     },
 
     _getAppliedFilter: function(filter) {
@@ -693,7 +718,7 @@ Polymer({
     _resetFilters: function() {
         var component = this;
         this.cachedFilters.forEach(function(cache) {
-            if(!(component._searchFilter && cache.category == component._searchFilter.category)){
+            if (!(component._searchFilter && cache.category == component._searchFilter.category)) {
                 component._resetElement(cache.element, cache.name);
             }
         });
@@ -792,64 +817,64 @@ Polymer({
         return false;
     },
 
-    _openModal: function () {
+    _openModal: function() {
         var component = this;
         //this.$$('#filteredRatio').hidden = true;
         this.$$('#filterModal').hidden = false;
         component.fire('filter-open');
     },
 
-    _showHeader: function(){
+    _showHeader: function() {
         this.$.filteredRatio.hidden = false;
     },
 
-    _hideHeader: function(){
+    _hideHeader: function() {
         this.$.filteredRatio.hidden = true;
     },
 
-    _getFilteredRatio: function (pagingInfo) {
+    _getFilteredRatio: function(pagingInfo) {
         if (pagingInfo != undefined)
             return pagingInfo.filteredCount + "/" + pagingInfo.total;
     },
     /*This functionality is removed for now*/
-   /* _getFilterCount: function (count) { 
-        var _filterCount;
-        switch (count) {
-            case 0:
-                _filterCount = "";
-                break;
-            case 1:
-                _filterCount = count + " filter applied";
-                break;
-            default:
-                _filterCount = count + " filters applied";
+    /* _getFilterCount: function (count) { 
+         var _filterCount;
+         switch (count) {
+             case 0:
+                 _filterCount = "";
+                 break;
+             case 1:
+                 _filterCount = count + " filter applied";
+                 break;
+             default:
+                 _filterCount = count + " filters applied";
 
-        }
-        return _filterCount;
-    },*/
+         }
+         return _filterCount;
+     },*/
 
-    findSearchFilter: function(response){
+    findSearchFilter: function(response) {
         var searchFilter = null;
-        if(response && response.length){
-            response.forEach(function(val){
-                if(val.type == 'Search'){
-                    searchFilter = val;                    
+        if (response && response.length) {
+            response.forEach(function(val) {
+                if (val.type == 'Search') {
+                    searchFilter = val;
                 }
             });
         }
         return searchFilter;
     },
 
-    _searchValChanged: function(newValue, oldValue){  
+    _searchValChanged: function(newValue, oldValue) {
         //on load scenario
-        if((!newValue && !oldValue) || !this._searchFilter)    
+        if ((!newValue && !oldValue) || !this._searchFilter)
             return;
 
         //empty space handling not fire api call
-        if(newValue && oldValue && newValue.trim() == oldValue.trim())
+        if (newValue && oldValue && newValue.trim() == oldValue.trim())
             return;
 
-        var component = this;      
+        var component = this;
 
         this._loadingResultsSearchBox = false;
 
@@ -861,7 +886,7 @@ Polymer({
 
         var currentFilter = {
             "category": this._searchFilter.category,
-            "group": this._searchFilter.items[0].group,                
+            "group": this._searchFilter.items[0].group,
             "name": this._searchFilter.items[0].name,
             "label": this._searchFilter.items[0].label,
             "type": this._searchFilter.type,
@@ -869,72 +894,76 @@ Polymer({
             'hide': true
         };
         this.push('cachedFilters', currentFilter);
-        
+
         // if(this._searchFilterTimer){
         //     clearTimeout(this._searchFilterTimer);
         // }
 
-        if(this._searchFilterTimer == -1){
+        if (this._searchFilterTimer == -1) {
             this._searchFilterTimer = setTimeout(function() {
                 component._applyFilters();
-                component._searchFilterTimer = -1;                
-            }, 750);        
-        }        
-    },
-
-    _removeSearchFilter: function(){
-        var component = this;
-        component._removeFilter({model: {item: component.cachedFilters.find(function(filter, index) {
-                if (filter.category == component._searchFilter.category)
-                    return true;
-                return false;
-            })
-        }});
-        
-    },
-    searchSubmit: function(e){
-        if(e.keyCode == 13){
-            //code to hide mobile keypad 
-            if(document.activeElement) {
-                document.activeElement.blur();
-            } 
+                component._searchFilterTimer = -1;
+            }, 750);
         }
     },
 
-    _getCountValue: function(items){
-        if(!items || !items.length)
+    _removeSearchFilter: function() {
+        var component = this;
+        component._removeFilter({
+            model: {
+                item: component.cachedFilters.find(function(filter, index) {
+                    if (filter.category == component._searchFilter.category)
+                        return true;
+                    return false;
+                })
+            }
+        });
+        component.searchVal = null;
+
+    },
+    searchSubmit: function(e) {
+        if (e.keyCode == 13) {
+            //code to hide mobile keypad 
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+        }
+    },
+
+    _getCountValue: function(items) {
+        if (!items || !items.length)
             return '';
 
         var count = '';
-        items.forEach(function(data){
-            if(data.key && data.key == 'Count'){
+        items.forEach(function(data) {
+            if (data.key && data.key == 'Count') {
                 count = '(' + data.value + ')';
             }
         });
 
         return count;
     },
-    _addListenerBlur: function(){
-        if(this._searchFilter){
+    _addListenerBlur: function() {
+        if (this._searchFilter) {
             var component = this;
-            setTimeout(function(){
-                component.$$('#searchInput').querySelector('input').addEventListener('blur',function(){
-                    alert(1);
+            setTimeout(function() {
+                component.$$('#searchInput').querySelector('input').addEventListener('blur', function() {
+                    //alert(1);
                     component._toggleSearchBox();
                 });
-            },100);
+            }, 100);
         }
     },
 
-    _onResultsResponse: function(){
+    _onResultsResponse: function() {
         this._loadingResultsSearchBox = true;
 
     },
 
-    _toggleSearchBox: function(){
-        if(this.$$('#searchBox').classList.contains('active')){
+    _toggleSearchBox: function() {
+        if (this.$$('#searchBox').classList.contains('active')) {
             this.$$('#searchBox').classList.remove('active');
-        }else{
+        } else {
             this.$$('#searchBox').classList.add('active');
             this.$$('#searchInput').querySelector('input').focus();
         }
