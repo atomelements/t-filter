@@ -154,15 +154,12 @@
             padding: 0 10px;
             width: 100%;
             left: 100%;
-            top: 50%;
-            height: 100%;
-            transform: translateY(-50%);
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;    
-            -moz-box-shadow: inset 0 0 5px #000000;
-            -webkit-box-shadow: inset 0 0 5px #000000;
-            box-shadow: inset 0 0 4px #000000;
+            color: #bbbbbb;
+            -webkit-box-sizing: border-box; 
+            box-sizing: border-box;  
+            -moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.5);
+            -webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.5);
         }
         
         #searchBox ::content input{
@@ -217,11 +214,11 @@
             <template is="dom-if" if="[[_searchFilter]]">
                 <div class="searchBox-content layout horizontal center">
                     <span on-click="_toggleSearchBox" class="flex searchBox-content-ellipsis">[[searchVal]]</span>
-                    <span class="devider"></span>
+                    <!-- <span class="devider" hidden$="[[!searchVal]]"></span> -->
                     <iron-icon class="icon" on-click="_removeSearchFilter" icon="close" hidden$="[[!searchVal]]"></iron-icon>
                     <iron-icon class="icon" on-click="_toggleSearchBox" icon="search" hidden$="[[searchVal]]"></iron-icon>
                 </div>
-                <div class="layout horizontal center" id="searchBox">
+                <div class="layout horizontal center fit" id="searchBox">
                     <t-input id="searchInput" no-label-float class="flex" label="[[_searchFilter.label]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
                     <span hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
                     <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
