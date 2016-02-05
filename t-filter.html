@@ -177,7 +177,9 @@
         .link {
             color: var(--link-color,#0098ff);
         }
-
+        .display-value{
+            margin-right: 5px;
+        }
         .devider {
             width: 1px;
             height: 20px;
@@ -246,14 +248,14 @@
                                             <template is="dom-if" if="[[_isNotRating(key.category)]]">
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout horizontal">
-                                                        <div class="layout  flex item-layout justified style-scope t-component-panel">
+                                                        <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
                                                             <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
                                                             <template is="dom-if" if="[[!item.displayValue]]">
-                                                                [[_getCountValue(item.additionalInfo)]]
+                                                                <span class="display-value">[[_getCountValue(item.additionalInfo)]]</span>
                                                             </template>
                                                         </div>
                                                         <template is="dom-if" if="[[item.displayValue]]">
-                                                            <div>[[item.displayValue]]</div>
+                                                            <div class="display-value">[[item.displayValue]]</div>
                                                         </template>
                                                     </div>
                                                 </template>
@@ -264,7 +266,7 @@
                                                         <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
                                                             <div class="layout horizontal center font-12 justified">
                                                                 <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
-                                                                <div>[[item.displayValue]]</div>
+                                                                <div  class="display-value">[[item.displayValue]]</div>
                                                             </div>
                                                         </t-checkbox>
                                                     </div>
