@@ -584,14 +584,14 @@ Polymer({
     },
 
     _toggle: function(event) {
-        var collapseId = event.target.parentElement.getAttribute('data-category');
-        var element = this.querySelector('#' + collapseId);
+        var parentElement = event.currentTarget.parentElement,
+        element = parentElement.querySelector('iron-collapse');
         if (element !== null)
             element.toggle();
         event.stopPropagation();
         return false;
     },
-
+    
     _isRating: function(category) {
         return category.toLowerCase() === 'rating';
     },
