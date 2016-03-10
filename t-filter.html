@@ -684,7 +684,9 @@ Polymer({
                 element.value = '';
                 break;
             case 't-calendar':
-                element.selectedDate = '';
+                element._clear();
+                //patch because in app is not removing the input value
+                element.querySelector('input').value = '';
                 break;
         }
     },
