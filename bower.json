@@ -37,7 +37,8 @@
     "t-input": "atomelements/t-input#^1.0.0",
     "t-range": "atomelements/t-range#^1.0.0",
     "t-starrating": "travelnxtElements/t-starrating#^1.0.0",
-    "polymer": "Polymer/polymer#^1.0.0"
+    "polymer": "Polymer/polymer#^1.0.0",
+    "t-calendar": "atomelements/t-calendar#^1.0.0"
   },
   "devDependencies": {
     "webcomponentsjs": "^0.7.14",

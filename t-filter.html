@@ -6,6 +6,7 @@
 <link rel="import" href="../iron-ajax/iron-ajax.html" />
 <link rel="import" href="../iron-collapse/iron-collapse.html" />
 <link rel="import" href="../t-checkbox/t-checkbox.html" />
+<link rel="import" href="../t-calendar/t-calendar.html" />
 <link rel="import" href="../t-header/t-header.html" />
 <link rel="import" href="../paper-item/paper-item.html" />
 <link rel="import" href="../iron-icon/iron-icon.html" />
@@ -113,12 +114,13 @@
             vertical-align: super;
             font-size: 0;
         }
+        
         .modal {
             bottom: 0;
             z-index: 10;
             background: #fff;
         }
-       
+        
         #filteredRatio {
             padding: 10px;
             border-bottom: 1px solid;
@@ -129,10 +131,10 @@
         }
         
         .total-results,
-        .icon-reset-search{
+        .icon-reset-search {
             margin-left: 5px;
         }
-
+        
         #searchBox {
             background: #fff;
             z-index: 1;
@@ -141,14 +143,15 @@
             width: 100%;
             left: 100%;
             /* color: #bbbbbb; */
-            -webkit-box-sizing: border-box; 
+            -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }
         
-        #searchBox ::content input{
+        #searchBox ::content input {
             border: 0!important;
             padding-left: 5px !important;
         }
+        
         #searchBox.active {
             left: 0;
         }
@@ -157,12 +160,12 @@
             width: 14px;
             height: 14px;
         }
-        
         /* patch to handle nexus page scroll */
-        #controller{
+        
+        #controller {
             overflow: hidden;
         }
-
+        
         .scrollsection {
             overflow: auto;
         }
@@ -178,13 +181,15 @@
             -ms-text-overflow: ellipsis;
             text-overflow: ellipsis;
         }
-
+        
         .link {
-            color: var(--link-color,#0098ff);
+            color: var(--link-color, #0098ff);
         }
-        .display-value{
+        
+        .display-value {
             margin-right: 5px;
         }
+        
         .devider {
             width: 1px;
             height: 20px;
@@ -197,7 +202,7 @@
                 <iron-icon icon="filter-list" on-click="_openModal"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
                     <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
-                    <span>results</span>
+                <span>results</span>
                 </span>
             </div>
             <!-- <span>{{_getFilterCount(cachedFilters.length)}}</span> -->
@@ -225,7 +230,7 @@
                     <div class="heading">
                         <div class="layout horizontal center justified item-layout">
                             <a class="link" on-click="_resetFilters">reset</a>
-                            <t-button label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
+                            <t-button id="applyfilters" label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
                         </div>
                     </div>
                     <div class="flex scrollsection">
@@ -271,7 +276,7 @@
                                                         <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
                                                             <div class="layout horizontal center font-12 justified">
                                                                 <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
-                                                                <div  class="display-value">[[item.displayValue]]</div>
+                                                                <div class="display-value">[[item.displayValue]]</div>
                                                             </div>
                                                         </t-checkbox>
                                                     </div>
@@ -294,6 +299,26 @@
                                                     <div class="range-block">
                                                         <t-range show-twelve-hour-clock="[[showTwelveHourClock]]" label="[[range.label]]" no-label="[[_hideLabel(range)]]" data-index$="[[i]]" step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged" margin="1"></t-range>
                                                     </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </iron-collapse>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(key,'DateRange')}}">
+                                <div class="layout item">
+                                    <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
+                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                        <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                                    </div>
+                                    <iron-collapse opened="[[opened]]" id="[[key.category]]">
+                                        <div class="filter-block">
+                                            <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
+                                                <template is="dom-if" if="[[_isEven(i)]]">
+                                                    <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="checkIn" selected-date="{{checkIn}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                    </t-calendar>
+                                                    <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="checkOut" selected-date="{{checkOut}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                    </t-calendar>
                                                 </template>
                                             </template>
                                         </div>
@@ -387,7 +412,7 @@ Polymer({
         },
 
 
-        _loadingResultsSearchBox:{
+        _loadingResultsSearchBox: {
             type: Boolean,
             value: false
         }
@@ -403,7 +428,6 @@ Polymer({
         if (this.filterApi != '' && this.auto)
             this.generateFilter();
     },
-
     _getMaxRange: function(items, index) {
         var range = items[index + 1];
 
@@ -583,15 +607,50 @@ Polymer({
 
     },
 
+    _dateChanged: function(e) {
+
+        if (!e.model.dateRange)
+            return;
+
+        var instance = e.model.dateRange;
+        var target = e.currentTarget;
+        var category = target.getAttribute("data-category");
+        var group = target.getAttribute("data-group");
+        var subCategory = target.label;
+        var elementIndex = target.getAttribute('data-index');
+        var type = target.getAttribute("data-type");
+        var name = target.getAttribute("name");
+
+        this.cachedFilters = this.cachedFilters.filter(function(instance) {
+            var cIndex = instance.element.getAttribute('data-index');
+            return instance.category != category || elementIndex !== cIndex;
+        });
+
+        var currentFilter = {
+            "category": category,
+            "group": group,
+            "subgroup": subCategory,
+            "name": name,
+            "min": target.from,
+            "max": target.to,
+            "label": category,
+            "type": type
+        };
+
+        currentFilter.element = e.target;
+        this.push('cachedFilters', currentFilter);
+
+    },
+
     _toggle: function(event) {
         var parentElement = event.currentTarget.parentElement,
-        element = parentElement.querySelector('iron-collapse');
+            element = parentElement.querySelector('iron-collapse');
         if (element !== null)
             element.toggle();
         event.stopPropagation();
         return false;
     },
-    
+
     _isRating: function(category) {
         return category.toLowerCase() === 'rating';
     },
@@ -615,6 +674,9 @@ Polymer({
             case 't-input':
                 element.value = '';
                 break;
+            case 't-calendar':
+                element.selectedDate = '';
+                break;
         }
     },
 
@@ -633,7 +695,7 @@ Polymer({
     },
 
     _getDisplayLabel: function(key) {
-        if (key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
+        if (key.items[0].additionalInfo && key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
             return key.label + ' (' + key.items[0].additionalInfo[0].value + ')';
         }
         return key.label;
@@ -765,8 +827,14 @@ Polymer({
         return formattedTime;
     },
 
+    _toggleFilterButton: function() {
+        this.$.applyfilters.disabled = !(this.cachedFilters && this.cachedFilters.length > 0);
+    },
 
     _getChip: function(item, index) {
+
+        this._toggleFilterButton();
+
         var filter = this.cachedFilters[index];
         switch (filter.type) {
             case 'Options':
@@ -781,6 +849,18 @@ Polymer({
                 }
             case 'Search':
                 return filter.category;
+            case 'DateRange':
+                {
+                    return this._buildDateChip(filter);
+                }
+        }
+    },
+
+    _buildDateChip: function(filter) {
+        if (filter.name === 'StartDate') {
+            return 'trips after ' + filter.element.selectedDate;
+        } else {
+            return 'trips before ' + filter.element.selectedDate;
         }
     },
 
@@ -916,9 +996,9 @@ Polymer({
         component.searchVal = null;
 
     },
-    
-    _clearFilterAndFocus:function(e){
-        if(this.searchVal){
+
+    _clearFilterAndFocus: function(e) {
+        if (this.searchVal) {
             this._removeSearchFilter();
             this._toggleSearchBox(e);
         }
