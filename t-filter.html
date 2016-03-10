@@ -214,7 +214,7 @@
                     <iron-icon on-click="_toggleSearchBox" icon="search" hidden$="[[searchVal]]"></iron-icon>
                 </div>
                 <div class="layout horizontal center fit" id="searchBox">
-                    <t-input id="searchInput" no-label-float class="flex" label="Search hotel name" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
+                    <t-input id="searchInput" no-label-float class="flex" label="[[searchLabel]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
                     <span hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
                     <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
                     <span class="devider"></span>
@@ -415,6 +415,11 @@ Polymer({
         _loadingResultsSearchBox: {
             type: Boolean,
             value: false
+        },
+
+        searchLabel:{
+            type:String,
+            value:'Search hotel name'
         }
     },
     observers: [
