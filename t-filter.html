@@ -401,6 +401,11 @@ Polymer({
             observer: '_searchValChanged'
         },
 
+        filterResponseParam:{
+            type:String,
+            value:'filters'
+        },
+
         _searchFilter: {
             type: Object,
             computed: 'findSearchFilter(response)'
@@ -502,8 +507,8 @@ Polymer({
 
     _handleResponse: function(e) {
         var response = e.detail.response;
-        if (response.status.isSuccessful && response.filters && response.filters.length > 0) {
-            this.response = this._applyInclusions(response.filters);
+        if (response.status.isSuccessful && response[this.filterResponseParam] && response[this.filterResponseParam].length > 0) {
+            this.response = this._applyInclusions(response[this.filterResponseParam]);
             this.fire('modify-filter-data', {
                 element: this,
                 filters: this.response
