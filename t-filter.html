@@ -259,7 +259,7 @@
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout horizontal">
                                                         <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
-                                                            <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
+                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
                                                             <template is="dom-if" if="[[!item.displayValue]]">
                                                                 <span class="display-value">[[_getCountValue(item.additionalInfo)]]</span>
                                                             </template>
@@ -552,11 +552,13 @@ Polymer({
 
     _checkChanged: function(e) {
         var instance = e.model.item;
+        var target = e.currentTarget;
+        var category = target.getAttribute("data-category");
         if (instance) {
             var label = e.currentTarget.getAttribute("data-label");
             var type = e.currentTarget.getAttribute("data-type");
             var currentFilter = {
-                "category": instance.group,
+                "category": category,
                 "group": instance.group,
                 "name": instance.name,
                 "value": instance.value,
@@ -764,7 +766,7 @@ Polymer({
         switch (filter.type) {
             case 'Options':
                 filters.push({
-                    "category": filter.group,
+                    "category": filter.category,
                     "group": filter.group,
                     "name": filter.name,
                     "value": filter.value,
