@@ -316,12 +316,12 @@
                                             <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
                                                 <template is="dom-if" if="[[_isEven(i)]]">
                                                     <div class="layout horizontal">
-                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="checkIn" selected-date="{{checkIn}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
                                                         </t-calendar>
                                                         &nbsp;
                                                         &nbsp;
                                                         &nbsp;
-                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="checkOut" selected-date="{{checkOut}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
                                                         </t-calendar>
                                                     </div>
                                                 </template>
@@ -442,6 +442,7 @@ Polymer({
         if (this.filterApi != '' && this.auto)
             this.generateFilter();
     },
+
     _getMaxRange: function(items, index) {
         var range = items[index + 1];
 
@@ -624,10 +625,17 @@ Polymer({
     _dateChanged: function(e) {
 
         if (!e.model.dateRange)
-            return;
+            return;      
 
         var instance = e.model.dateRange;
         var target = e.currentTarget;
+
+        if (target.id === "startDate") {
+            this._startDateDateChanged();
+        } else{
+            this._endDateDateChanged();
+        }
+
         var category = target.getAttribute("data-category");
         var group = target.getAttribute("data-group");
         var subCategory = target.label;
@@ -654,6 +662,23 @@ Polymer({
         currentFilter.element = e.target;
         this.push('cachedFilters', currentFilter);
 
+    },
+
+    _startDateDateChanged: function() {
+        if (this.startDate != '') {
+                this.$$("#endDate").picker.set('min', new Date(this.startDate));
+        } else {
+            this.$$("#startDate").picker.set('max', false);
+            this.$$("#endDate").picker.set('min', new Date());
+        }
+    },
+
+    _endDateDateChanged: function() {
+        if (this.endDate != '') {
+            this.$$("#startDate").picker.set('max', new Date(this.endDate));
+        } else{
+            this.$$("#startDate").picker.set('max', false);
+        }
     },
 
     _toggle: function(event) {
@@ -774,6 +799,17 @@ Polymer({
                     "label": filter.label,
                     "type": filter.type
                 });
+                break;
+            case 'DateRange':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.group,
+                    "name": filter.name,
+                    "value": filter.element.selectedDate,
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                break;
         }
 
         return filters;
