@@ -433,7 +433,8 @@ Polymer({
     },
     observers: [
         '_onResultsResponse(resultsPagingInfo)',
-        '_addListenerBlur(_searchFilter)'
+        '_addListenerBlur(_searchFilter)',
+        '_setButtonState(cachedFilters.splices)'
     ],
 
     attached: function() {
@@ -441,6 +442,10 @@ Polymer({
         Polymer.dom(this.$.component).getDistributedNodes()[0];
         if (this.filterApi != '' && this.auto)
             this.generateFilter();
+    },
+
+    _setButtonState:function(changeReacord){
+        this.$.applyfilters.disabled =  this.cachedFilters.length > 0 ? false:true;
     },
 
     _getMaxRange: function(items, index) {
@@ -744,7 +749,12 @@ Polymer({
         return key.label;
     },
 
-    _applyFilters: function() {
+    _applyFilters: function(e) {
+        if(e){
+            if(e.target.id == 'applyfilters' && e.target.disabled ){
+                return;
+            }
+        }
         var component = this;
         var filters = [];
         this._interstitialFilters = this.cachedFilters;
@@ -880,7 +890,7 @@ Polymer({
 
         return formattedTime;
     },
-    
+
     _getChip: function(item, index) {
 
         var filter = this.cachedFilters[index];
