@@ -880,14 +880,8 @@ Polymer({
 
         return formattedTime;
     },
-
-    _toggleFilterButton: function() {
-        this.$.applyfilters.disabled = !(this.cachedFilters && this.cachedFilters.length > 0);
-    },
-
+    
     _getChip: function(item, index) {
-
-        this._toggleFilterButton();
 
         var filter = this.cachedFilters[index];
         switch (filter.type) {
