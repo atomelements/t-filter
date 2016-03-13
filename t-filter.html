@@ -356,6 +356,8 @@ Polymer({
             value: []
         },
 
+
+
         auto: {
             type: Boolean,
             value: false
@@ -378,6 +380,15 @@ Polymer({
             value: function() {
                 return [];
             }
+        },
+
+        /**
+         * Customize filter parameters
+         * array item is an object with key equal to category and value equal toitem name
+        */
+        excludedFilters:{
+            type: Array,
+            value: []
         },
 
         cachedFilters: {
@@ -520,11 +531,30 @@ Polymer({
         var response = e.detail.response;
         if (response.status.isSuccessful && response[this.filterResponseParam] && response[this.filterResponseParam].length > 0) {
             this.response = this._applyInclusions(response[this.filterResponseParam]);
+            this._customizeFilters();
             this.fire('modify-filter-data', {
                 element: this,
                 filters: this.response
             });
         }
+    },
+
+    _customizeFilters:function () {
+        if(!this.response || !this.response.length || !this.excludedFilters || !this.excludedFilters.length)
+            return;
+
+        for (var i = 0; i < this.response.length; i++) {
+            for (var j = 0; j < this.excludedFilters.length; j++) {
+                if(this.excludedFilters[j].hasOwnProperty(this.response[i].category)){
+                    var itemsToBeRemoved = this.excludedFilters[j][this.response[i].category];
+                    var itemsToBeRetained = this.response[i].items.filter(function (item) {
+                        return itemsToBeRemoved.indexOf(item.name) < 0;
+                    });
+                    this.response[i].items = itemsToBeRetained;
+                }
+            }
+        }
+
     },
 
     _handleError: function(e) {
