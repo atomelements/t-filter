@@ -316,12 +316,12 @@
                                             <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
                                                 <template is="dom-if" if="[[_isEven(i)]]">
                                                     <div class="layout horizontal">
-                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minStartDate]]">
                                                         </t-calendar>
                                                         &nbsp;
                                                         &nbsp;
                                                         &nbsp;
-                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged">
+                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minEndDate]]">
                                                         </t-calendar>
                                                     </div>
                                                 </template>
@@ -440,6 +440,16 @@ Polymer({
 
         searchLabel:{
             type:String
+        },
+
+        minStartDate:{
+            type:Boolean,
+            value:false
+        },
+
+        minEndDate:{
+            type:Boolean,
+            value:false
         }
     },
     observers: [
@@ -706,7 +716,7 @@ Polymer({
                 this.$$("#endDate").picker.set('min', new Date(this.startDate));
         } else {
             this.$$("#startDate").picker.set('max', false);
-            this.$$("#endDate").picker.set('min', new Date());
+            this.$$("#endDate").picker.set('min', false);
         }
     },
 
