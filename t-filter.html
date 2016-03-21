@@ -12,6 +12,7 @@
 <link rel="import" href="../iron-icon/iron-icon.html" />
 <link rel="import" href="../iron-list/iron-list.html" />
 <link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <!--
     `<t-filter>` is a polymer component that generates a playground for interacting with components.
 
@@ -30,7 +31,7 @@
 -->
 <dom-module id="t-filter">
     <template>
-        <style>
+        <style include="iron-flex">
         :root {
             --checkbox-unchecked-color: var(-grey-two, #eeeeee);
             --checkbox-unchecked-ink-color: var(-grey-two, #eeeeee);
@@ -38,6 +39,7 @@
         
         :host {
             font-size: var(--font-12, 12px);
+            font-family: var(--primary-font-family);
             cursor: pointer;
             display: block;
             color: var(--grey-six, #333333);
@@ -50,33 +52,30 @@
         
         .scrollsection > .item,
         .heading {
-            border-bottom: 1px solid;
-            border-color: var(--grey-two, #eeeeee);
             padding: 10px;
         }
         
         #controller .category {
             padding: 10px 0;
         }
-        
+        #controller .category,
+          .heading,
+          .chip {
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+        }
         .filter-block {
             padding: 0 0 10px;
         }
         
-        .filter-block .layout {
-            margin-top: 10px;
-        }
-        
-        .filter-block .layout:first-child {
-            margin-top: 0;
+        .filter-block > .layout {
+            margin-top: 20px;
         }
         
         .chip {
             background: #ffffd0;
             padding: 10px 5px;
             font-weight: 600;
-            border-bottom: 1px solid;
-            border-color: var(--grey-two, #eeeeee);
         }
         
         .chip:last-child {
@@ -191,6 +190,15 @@
             margin: 0px 5px 0 10px;
             background: var(--grey-three, #bbbbbb);
         }
+        ::content #checkboxLabel{
+            padding-left: 20px!important;
+            line-height: 18px;
+            color: var(--primary-text-color, #333333);
+            font-weight: 600;
+        }
+        ::content .display-value{
+            color: var(--grey-three, #bbbbbb);
+        }
         </style>
         <div class="layout horizontal" id="filteredRatio">
             <div class="flex layout horizontal center">
@@ -254,10 +262,18 @@
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout horizontal">
                                                         <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
-                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
-                                                            <template is="dom-if" if="[[!item.displayValue]]">
-                                                                <span class="display-value">[[_getCountValue(item.additionalInfo)]]</span>
-                                                            </template>
+                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
+
+                                                            <div class="layout horizontal center justified">
+                                                                <div>[[item.label]]</div>
+                                                                <template is="dom-if" if="[[!item.displayValue]]">
+                                                                    <span class="display-value font-12 ">[[_getCountValue(item.additionalInfo)]]</span>
+                                                                </template>
+                                                            </div>
+
+
+                                                            </t-checkbox>
+                                                            
                                                         </div>
                                                         <template is="dom-if" if="[[item.displayValue]]">
                                                             <div class="display-value">[[item.displayValue]]</div>
