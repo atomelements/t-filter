@@ -56,10 +56,10 @@
         }
         
         #controller .category {
-            padding: 10px 0;
+            padding: 2px 0;
+            font-size: var(--font-16, 16px);
         }
         #controller .category,
-          .heading,
           .chip {
             border-bottom: 1px solid;
             border-color: var(--grey-two, #eeeeee);
@@ -87,12 +87,15 @@
             height: 16px;
         }
         
-        .range-block {
-            padding: 10px;
-        }
-        
         t-checkbox {
             width: 100%;
+        }
+        t-range{
+            margin: 0 48px;
+            font-weight: 600;
+        }
+        .range-block {
+            padding: 10px 0;
         }
         
         .font-12 {
@@ -183,7 +186,6 @@
         .display-value {
             margin-right: 5px;
         }
-        
         .devider {
             width: 1px;
             height: 20px;
@@ -196,7 +198,8 @@
             color: var(--primary-text-color, #333333);
             font-weight: 600;
         }
-        ::content .display-value{
+        ::content .display-value,
+        .secondary-text{
             color: var(--grey-three, #bbbbbb);
         }
         </style>
@@ -232,7 +235,7 @@
                 <div id="controller" class="layout vertical flex">
                     <div class="heading">
                         <div class="layout horizontal center justified item-layout">
-                            <a class="link" on-click="_resetFilters">reset</a>
+                            <a class="link" on-click="_resetFilters">Reset</a>
                             <t-button id="applyfilters" label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
                         </div>
                     </div>
@@ -254,7 +257,7 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[key.label]]</div>
-                                        <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="hardware:keyboard-arrow-down"></iron-icon>
                                     </div>
                                     <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
                                         <div class="filter-block">
@@ -301,7 +304,7 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="hardware:keyboard-arrow-down"></iron-icon>
                                     </div>
                                     <iron-collapse opened="[[opened]]" id="Iron-collapse1">
                                         <div class="filter-block">
@@ -320,7 +323,7 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="hardware:keyboard-arrow-down"></iron-icon>
                                     </div>
                                     <iron-collapse opened="[[opened]]" id="[[key.category]]">
                                         <div class="filter-block">
