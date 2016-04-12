@@ -288,7 +288,7 @@
                                             <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout item-layout justified style-scope t-component-panel">
-                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
+                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}"  data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
                                                             <div class="layout horizontal center font-12 justified">
                                                                 <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
                                                                 <div class="display-value">[[item.displayValue]]</div>
