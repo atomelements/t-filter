@@ -291,12 +291,7 @@
                                                             <div class="layout horizontal center font-12 justified">
                                                                 <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
                                                                 <div class="display-value">
-                                                                    <template is="dom-if" if="[[currency]]">
-                                                                        [[currency]] [[item.value]]
-                                                                    </template>
-                                                                    <template is="dom-if" if="[[!currency]]">
-                                                                        [[item.displayValue]]
-                                                                    </template>
+                                                                    [[_getDisplayValue(item)]]
                                                                 </div>
                                                             </div>
                                                         </t-checkbox>
@@ -1193,6 +1188,15 @@ Polymer({
             this.$$('#searchInput').querySelector('input').focus();
         }
         e.stopPropagation();
+    },
+
+    _getDisplayValue:function (item) {
+        if(this.currency){
+            item.value = parseFloat(Math.round(item.value * 100) / 100);
+            return this.currency + ' ' + item.value;
+        }else{
+            return item.displayValue;
+        }
     }
 })
 </script>
