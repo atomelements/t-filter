@@ -279,7 +279,7 @@
                                                             
                                                         </div>
                                                         <template is="dom-if" if="[[item.displayValue]]">
-                                                            <div class="display-value">[[item.displayValue]]</div>
+                                                            <div class="display-value">[[_getDisplayValue(item)]]</div>
                                                         </template>
                                                     </div>
                                                 </template>
@@ -821,7 +821,7 @@ Polymer({
     _getDisplayLabel: function(key) {
         if (key.items[0].additionalInfo && key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
             if(this.currency){
-                return key.label + ' ( ' + this.currency + ' )';
+                return key.label + ' (' + this.currency + ')';
             }
             return key.label + ' (' + key.items[0].additionalInfo[0].value + ')';
         }
