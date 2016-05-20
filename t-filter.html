@@ -17,13 +17,12 @@
 
 
     <div class="demo-canvas">
-        
     </div>
 
     <t-filter metadata-source="metadata url" property-source="property url" component="component name">
+
         
         <div class="component">
-            
             'component template'
         </div>
     </t-filter>     
@@ -43,7 +42,7 @@
             font-family: var(--primary-font-family);
             cursor: pointer;
             display: block;
-            color: var(--grey-six, #333333);
+            color: var(--primary-text-color, #333333);
             -webkit-tap-highlight-color: transparent;
         }
         
@@ -55,7 +54,6 @@
         .heading {
             padding: 10px;
         }
-        
         #controller .category {
             padding: 2px 0;
             font-size: var(--font-16, 16px);
@@ -65,6 +63,16 @@
             border-bottom: 1px solid;
             border-color: var(--grey-two, #eeeeee);
         }
+        
+        .category iron-icon {
+            will-change: transform;
+            transition: 0.3s ease transform;
+        }
+        
+        .category.closed iron-icon {
+            transform: rotate(180deg);
+        }
+        
         .filter-block {
             padding: 0 0 10px;
         }
@@ -90,9 +98,11 @@
         t-checkbox {
             width: 100%;
         }
-        t-range{
+        
+        t-range {
             margin: 0 48px;
         }
+        
         .range-block {
             padding: 10px 0;
         }
@@ -185,28 +195,36 @@
         .display-value {
             margin-right: 5px;
         }
+        
         .devider {
             width: 1px;
             height: 20px;
             margin: 0px 5px 0 10px;
             background: var(--grey-three, #bbbbbb);
         }
-        ::content #checkboxLabel{
+        
+        :host ::content #checkboxLabel {
             padding-left: 20px!important;
             line-height: 18px;
             color: var(--primary-text-color, #333333);
         }
+        
+        t-range{
+            font-size: var(--font-14, 14px);
+        }
+        
         t-range ::content .label,
         ::content .display-value,
-        .secondary-text{
+        .secondary-text {
             color: var(--grey-three, #bbbbbb);
+            font-size: var(--font-14, 14px);
         }
         </style>
         <div class="layout horizontal" id="filteredRatio">
             <div class="flex layout horizontal center">
                 <iron-icon icon="[[filterIcon]]" on-click="_openModal"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
-                    <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
+            <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
                 <span>results</span>
                 </span>
             </div>
@@ -235,7 +253,7 @@
                     <div class="heading">
                         <div class="layout horizontal center justified item-layout">
                             <a class="link" on-click="_resetFilters">Reset</a>
-                            <t-button id="applyfilters" label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
+                            <t-button id="applyfilters" label="Apply Filters" class="primary" on-click="_applyFilters" disabled="true"></t-button>
                         </div>
                     </div>
                     <div class="flex scrollsection">
@@ -256,7 +274,7 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[key.label]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-more"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                     </div>
                                     <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
                                         <div class="filter-block">
@@ -265,17 +283,13 @@
                                                     <div class="layout horizontal">
                                                         <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
                                                             <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
-
-                                                            <div class="layout horizontal center justified">
-                                                                <div>[[item.label]]</div>
-                                                                <template is="dom-if" if="[[!item.displayValue]]">
-                                                                    <span class="display-value font-12 ">[[_getCountValue(item.additionalInfo)]]</span>
-                                                                </template>
-                                                            </div>
-
-
+                                                                <div class="layout horizontal center justified">
+                                                                    <div>[[item.label]]</div>
+                                                                    <template is="dom-if" if="[[!item.displayValue]]">
+                                                                        <span class="display-value font-12 ">[[_getCountValue(item.additionalInfo)]]</span>
+                                                                    </template>
+                                                                </div>
                                                             </t-checkbox>
-                                                            
                                                         </div>
                                                         <template is="dom-if" if="[[item.displayValue]]">
                                                             <div class="display-value">[[_getDisplayValue(item)]]</div>
@@ -286,7 +300,7 @@
                                             <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout item-layout justified style-scope t-component-panel">
-                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}"  data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
+                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
                                                             <div class="layout horizontal center font-12 justified">
                                                                 <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
                                                                 <div class="display-value">
@@ -305,7 +319,7 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-more"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                     </div>
                                     <iron-collapse opened="[[opened]]" id="Iron-collapse1">
                                         <div class="filter-block">
@@ -324,18 +338,16 @@
                                 <div class="layout item">
                                     <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
                                         <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-more"></iron-icon>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                     </div>
-                                    <iron-collapse opened="[[opened]]" id="[[key.category]]">
+                                    <iron-collapse opened="[[opened]]" id="Iron-collapse2">
                                         <div class="filter-block">
                                             <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
                                                 <template is="dom-if" if="[[_isEven(i)]]">
                                                     <div class="layout horizontal">
                                                         <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minStartDate]]">
                                                         </t-calendar>
-                                                        &nbsp;
-                                                        &nbsp;
-                                                        &nbsp;
+                                                        &nbsp; &nbsp; &nbsp;
                                                         <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minEndDate]]">
                                                         </t-calendar>
                                                     </div>
@@ -420,8 +432,8 @@ Polymer({
         /**
          * Customize filter parameters
          * array item is an object with key equal to category and value equal toitem name
-        */
-        excludedFilters:{
+         */
+        excludedFilters: {
             type: Array,
             value: []
         },
@@ -452,9 +464,9 @@ Polymer({
             observer: '_searchValChanged'
         },
 
-        filterResponseParam:{
-            type:String,
-            value:'filters'
+        filterResponseParam: {
+            type: String,
+            value: 'filters'
         },
 
         _searchFilter: {
@@ -473,24 +485,24 @@ Polymer({
             value: false
         },
 
-        searchLabel:{
-            type:String
+        searchLabel: {
+            type: String
         },
 
-        minStartDate:{
-            type:Boolean,
-            value:false
+        minStartDate: {
+            type: Boolean,
+            value: false
         },
 
-        minEndDate:{
-            type:Boolean,
-            value:false
+        minEndDate: {
+            type: Boolean,
+            value: false
         }
     },
     observers: [
         '_onResultsResponse(resultsPagingInfo)',
         '_addListenerBlur(_searchFilter)',
-        '_setButtonState(cachedFilters.splices)'
+        //'_setButtonState(cachedFilters.splices)'
     ],
 
     attached: function() {
@@ -500,8 +512,8 @@ Polymer({
             this.generateFilter();
     },
 
-    _setButtonState:function(changeReacord){
-        this.$.applyfilters.disabled =  this.cachedFilters.length > 0 ? false:true;
+    _setButtonState: function(changeReacord) {
+        this.$.applyfilters.disabled = true;
     },
 
     _getMaxRange: function(items, index) {
@@ -584,15 +596,15 @@ Polymer({
         }
     },
 
-    _customizeFilters:function () {
-        if(!this.response || !this.response.length || !this.excludedFilters || !this.excludedFilters.length)
+    _customizeFilters: function() {
+        if (!this.response || !this.response.length || !this.excludedFilters || !this.excludedFilters.length)
             return;
 
         for (var i = 0; i < this.response.length; i++) {
             for (var j = 0; j < this.excludedFilters.length; j++) {
-                if(this.excludedFilters[j].hasOwnProperty(this.response[i].category)){
+                if (this.excludedFilters[j].hasOwnProperty(this.response[i].category)) {
                     var itemsToBeRemoved = this.excludedFilters[j][this.response[i].category];
-                    var itemsToBeRetained = this.response[i].items.filter(function (item) {
+                    var itemsToBeRetained = this.response[i].items.filter(function(item) {
                         return itemsToBeRemoved.indexOf(item.name) < 0;
                     });
                     this.response[i].items = itemsToBeRetained;
@@ -634,7 +646,10 @@ Polymer({
         var instance = e.model.item;
         var target = e.currentTarget;
         var category = target.getAttribute("data-category");
+
         if (instance) {
+            this.$.applyfilters.disabled = false;
+
             var label = e.currentTarget.getAttribute("data-label");
             var type = e.currentTarget.getAttribute("data-type");
             var currentFilter = {
@@ -682,7 +697,7 @@ Polymer({
         var subCategory = target.label;
         var elementIndex = target.getAttribute('data-index');
         var type = target.getAttribute("data-type");
-
+        this.$.applyfilters.disabled = false;
         this.cachedFilters = this.cachedFilters.filter(function(instance) {
             var cIndex = instance.element.getAttribute('data-index');
             return instance.category != category || elementIndex !== cIndex;
@@ -707,14 +722,14 @@ Polymer({
     _dateChanged: function(e) {
 
         if (!e.model.dateRange)
-            return;      
+            return;
 
         var instance = e.model.dateRange;
         var target = e.currentTarget;
 
         if (target.id === "startDate") {
             this._startDateDateChanged();
-        } else{
+        } else {
             this._endDateDateChanged();
         }
 
@@ -724,6 +739,8 @@ Polymer({
         var elementIndex = target.getAttribute('data-index');
         var type = target.getAttribute("data-type");
         var name = target.getAttribute("name");
+
+        this.$.applyfilters.disabled = false;
 
         this.cachedFilters = this.cachedFilters.filter(function(instance) {
             var cIndex = instance.element.getAttribute('data-index');
@@ -748,7 +765,7 @@ Polymer({
 
     _startDateDateChanged: function() {
         if (this.startDate != '') {
-                this.$$("#endDate").picker.set('min', new Date(this.startDate));
+            this.$$("#endDate").picker.set('min', new Date(this.startDate));
         } else {
             this.$$("#startDate").picker.set('max', false);
             this.$$("#endDate").picker.set('min', false);
@@ -758,12 +775,13 @@ Polymer({
     _endDateDateChanged: function() {
         if (this.endDate != '') {
             this.$$("#startDate").picker.set('max', new Date(this.endDate));
-        } else{
+        } else {
             this.$$("#startDate").picker.set('max', false);
         }
     },
 
     _toggle: function(event) {
+        event.currentTarget.classList.toggle('closed');
         var parentElement = event.currentTarget.parentElement,
             element = parentElement.querySelector('iron-collapse');
         if (element !== null)
@@ -806,10 +824,10 @@ Polymer({
     _removeFilter: function(event) {
         var currentFilter = event.model.item;
         var component = this;
-
+        this.$.applyfilters.disabled = false;
         var element = currentFilter.element;
         component._resetElement(element, currentFilter.name);
-
+        this.$.applyfilters.disabled = false;
         component.cachedFilters = component.cachedFilters.filter(function(filter, index) {
             if (filter.category == currentFilter.category && filter.name == currentFilter.name)
                 return false;
@@ -819,7 +837,7 @@ Polymer({
 
     _getDisplayLabel: function(key) {
         if (key.items[0].additionalInfo && key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
-            if(this.currency){
+            if (this.currency) {
                 return key.label + ' (' + this.currency + ')';
             }
             return key.label + ' (' + key.items[0].additionalInfo[0].value + ')';
@@ -828,14 +846,15 @@ Polymer({
     },
 
     _applyFilters: function(e) {
-        if(e){
-            if(e.target.id == 'applyfilters' && e.target.disabled ){
+        if (e) {
+            if (e.target.id == 'applyfilters' && e.target.disabled) {
                 return;
             }
         }
+        this.$.applyfilters.disabled = true;
         var component = this;
         var filters = [];
-        this._interstitialFilters = this.cachedFilters;
+        // this._interstitialFilters = this.cachedFilters;
         this.cachedFilters.forEach(function(filter) {
             filters = filters.concat(component._getAppliedFilter(filter));
         });
@@ -1019,7 +1038,8 @@ Polymer({
 
     _revertChanges: function(event) {
         var component = this;
-        this.cachedFilters = this._interstitialFilters;
+        //this.cachedFilters = this._interstitialFilters;
+        // this.$.applyfilters.disabled =  this.cachedFilters.length > 0 ? false:true;
         component.fire('filter-close');
 
         //this.$$('#filteredRatio').hidden = false;
@@ -1188,12 +1208,11 @@ Polymer({
         }
         e.stopPropagation();
     },
-
-    _getDisplayValue:function (item) {
-        if(this.currency){
+    _getDisplayValue: function(item) {
+        if (this.currency) {
             item.value = parseFloat(Math.round(item.value * 100) / 100);
             return this.currency + ' ' + item.value;
-        }else{
+        } else {
             return item.displayValue;
         }
     }
