@@ -226,7 +226,7 @@
             <div class="flex layout horizontal center">
                 <iron-icon icon="[[filterIcon]]" on-click="_openModal"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
-            <span>{{_getFilteredRatio(resultsPagingInfo)}}</span>
+                    <span>[[filteredRatio]]</span>
                 <span>results</span>
                 </span>
             </div>
@@ -240,7 +240,7 @@
                 </div>
                 <div class="layout horizontal center fit" id="searchBox">
                     <t-input id="searchInput" no-label-float class="flex" label="[[searchLabel]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
-                    <span hidden$="[[!_loadingResultsSearchBox]]">{{_getFilteredRatio(resultsPagingInfo)}}</span>
+                    <span hidden$="[[!_loadingResultsSearchBox]]">[[filteredRatio]]</span>
                     <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
                     <span class="devider"></span>
                     <iron-icon class="icon" on-click="_clearFilterAndFocus" icon="close"></iron-icon>
@@ -1067,7 +1067,7 @@ Polymer({
 
     _getFilteredRatio: function(pagingInfo) {
         if (pagingInfo != undefined)
-            return pagingInfo.filteredCount + "/" + pagingInfo.total;
+            this.filteredRatio = pagingInfo.filteredCount + "/" + pagingInfo.total;
     },
     /*This functionality is removed for now*/
     /* _getFilterCount: function (count) { 
