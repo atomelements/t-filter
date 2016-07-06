@@ -364,7 +364,7 @@
                 </div>
             </div>
         </div>
-        <iron-ajax id="call" url="{{filterApi}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
+        <iron-ajax id="call" url="{{filterApi}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_onHandleResponse" on-error="_handleError">
         </iron-ajax>
     </template>
 </dom-module>
@@ -586,16 +586,20 @@ Polymer({
         return index % 2 === 0;
     },
 
-    _handleResponse: function(e) {
+    _onHandleResponse: function(e) {
         var response = e.detail.response;
         if (response.status.isSuccessful && response[this.filterResponseParam] && response[this.filterResponseParam].length > 0) {
             this.response = this._applyInclusions(response[this.filterResponseParam]);
-            this._customizeFilters();
-            this.fire('modify-filter-data', {
-                element: this,
-                filters: this.response
-            });
+            this.handleResponse(this.response);
         }
+    },
+
+    handleResponse: function (response) {
+        this._customizeFilters();
+        this.fire('modify-filter-data', {
+            element: this,
+            filters: this.response
+        });
     },
 
     _customizeFilters: function() {
