@@ -282,7 +282,7 @@
                                         <div class="filter-block">
                                             <template is="dom-if" if="[[_isNotRating(key.category)]]">
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
-                                                    <div class="layout horizontal">
+                                                    <div class="layout horizontal" hidden$="[[_hideFilterByCount(item.additionalInfo)]]">
                                                         <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
                                                             <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
                                                                 <div class="layout horizontal center justified">
@@ -516,6 +516,20 @@ Polymer({
 
     _setButtonState: function(changeReacord) {
         this.$.applyfilters.disabled = true;
+    },
+
+    _hideFilterByCount: function (items) {
+        if (!items || !items.length)
+            return true;
+
+        var hideFilter = false;
+        items.forEach(function (data) {
+            if (data.key && data.key == 'Count' && data.value == 0) {
+                hideFilter = true;
+            }
+        });
+
+        return hideFilter;
     },
 
     _getMaxRange: function(items, index) {
