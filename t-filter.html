@@ -224,7 +224,8 @@
         </style>
         <div class="layout horizontal" id="filteredRatio">
             <div class="flex layout horizontal center">
-                <iron-icon icon="[[filterIcon]]" on-click="_openModal"></iron-icon>
+                <iron-icon hidden$="[[_disableFilters]]" icon="[[filterIcon]]" on-click="_openModal"></iron-icon>
+                <iron-icon hidden$="[[!_disableFilters]]" icon="[[disableFilterIcon]]"></iron-icon>
                 <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
                     <span>[[filteredRatio]]</span>
                 <span>results</span>
@@ -380,7 +381,15 @@ Polymer({
         /*Filter icon to be replaced and given value*/
         filterIcon: {
             type: String,
-            value: 'filter-list'
+            value: 'filter-list',
+            reflectToAttribute: true
+        },
+
+        // Disable filter icon to be replaced with given value
+        disableFilterIcon: {
+            type: String,
+            value: 'close',
+            reflectToAttribute: true
         },
 
         /*search icon to be replaced and given value*/
@@ -483,6 +492,11 @@ Polymer({
 
 
         _loadingResultsSearchBox: {
+            type: Boolean,
+            value: false
+        },
+
+        _disableFilters: {
             type: Boolean,
             value: false
         },
@@ -1086,6 +1100,12 @@ Polymer({
     _getFilteredRatio: function(pagingInfo) {
         if (pagingInfo != undefined)
             this.filteredRatio = pagingInfo.filteredCount + "/" + pagingInfo.total;
+
+        if (pagingInfo.total == 1 && pagingInfo.filteredCount == pagingInfo.total) {
+            this._disableFilters = true;
+        } else {
+            this._disableFilters = false;
+        }
     },
     /*This functionality is removed for now*/
     /* _getFilterCount: function (count) { 
