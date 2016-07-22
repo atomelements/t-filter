@@ -1098,13 +1098,14 @@ Polymer({
     },
 
     _getFilteredRatio: function(pagingInfo) {
-        if (pagingInfo != undefined)
+        if (pagingInfo) {
             this.filteredRatio = pagingInfo.filteredCount + "/" + pagingInfo.total;
 
-        if (pagingInfo.total == 1 && pagingInfo.filteredCount == pagingInfo.total) {
-            this._disableFilters = true;
-        } else {
-            this._disableFilters = false;
+            if (pagingInfo.total == 1 && pagingInfo.filteredCount == pagingInfo.total) {
+                this._disableFilters = true;
+            } else {
+                this._disableFilters = false;
+            }
         }
     },
     /*This functionality is removed for now*/
