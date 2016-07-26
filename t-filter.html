@@ -14,7 +14,9 @@
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <!--
     `<t-filter>` is a polymer component that generates a playground for interacting with components.
-
+    
+    If parent view explicitly asks to show price or count with option filter by setting either of `show-{{group}}-count` or `show-{{group}}-price`,
+    component handles this to show respective value along with `option` filter 
 
     <div class="demo-canvas">
     </div>
@@ -288,15 +290,10 @@
                                                             <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
                                                                 <div class="layout horizontal center justified">
                                                                     <div>[[item.label]]</div>
-                                                                    <template is="dom-if" if="[[!item.displayValue]]">
-                                                                        <span class="display-value font-12 ">[[_getCountValue(item.additionalInfo)]]</span>
-                                                                    </template>
+                                                                    <span class="display-value">[[_getDisplayValue(item)]]</span>
                                                                 </div>
                                                             </t-checkbox>
                                                         </div>
-                                                        <template is="dom-if" if="[[item.displayValue]]">
-                                                            <div class="display-value">[[_getDisplayValue(item)]]</div>
-                                                        </template>
                                                     </div>
                                                 </template>
                                             </template>
@@ -1249,7 +1246,31 @@ Polymer({
         }
         e.stopPropagation();
     },
+    /**
+     * This method returns diplay value for a filter.
+     * It might be either `count` in additional info or `price` in the item value with currency.
+     * If parent view explicitely asks to show price or count by setting either of `show-{{group}}-count` or `show-{{group}}-price`,
+     * method shows that value.
+     * @param  {[Object]} item {"group":"Price","name":"Min","label":"Minimum Price","displayValue":"$17.49","value":"17.49","selectedValue":null,"additionalInfo":[{"key":"Unit","value":"$"}]}
+     * @return {String}
+     */
     _getDisplayValue: function(item) {
+        var showCountProp = 'show' + item.group + 'Count';
+        var showPriceProp = 'show' + item.group + 'Price';
+        if (!this[showPriceProp] && !this[showCountProp]){
+            if (parseFloat(item.value)) {
+                return this._getMinValueWithCurrency(item);
+            } else {
+                return this._getCountValue(item.additionalInfo);
+            }
+        } else if (this[showPriceProp]) {
+            return this._getMinValueWithCurrency(item);
+        } else if (this[showCountProp]) {
+            return this._getCountValue(item.additionalInfo);
+        }
+        return "";
+    },
+    _getMinValueWithCurrency: function (item) {
         if (this.currency) {
             item.value = parseFloat(Math.round(item.value * 100) / 100);
             return this.currency + ' ' + item.value;
