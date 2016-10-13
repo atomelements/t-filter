@@ -531,7 +531,7 @@ Polymer({
 
     _hideFilterByCount: function (items) {
         if (!items || !items.length)
-            return true;
+            return false;
 
         var hideFilter = false;
         items.forEach(function (data) {
