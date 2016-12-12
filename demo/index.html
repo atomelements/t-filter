@@ -1,23 +1,31 @@
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1"> 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-	<link rel="import" href="../t-filter.html" />
-	<link rel="import" href="../../t-input/t-input.html"/>
-  
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../t-shared-components/theme.html">
 
-	<!-- <link rel="import" href="../../../datacomponents/t-table/t-column.html"/>  -->
+    <link rel="import" href="../t-filter.html" />
+    <link rel="import" href="../../iron-ajax/iron-ajax.html" />
+    <script src="custom-filter.js"></script>
 </head>
 
 <body>
+    <div class="demo-canvas">
+    </div>
+    <t-filter  ></t-filter>
+    <iron-ajax auto id="call" url="custom-filter.json" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json">
+    </iron-ajax>
 
-	<div class="demo-canvas">
-		
-	</div>
+    <script type="text/javascript">
+    var filterComp = document.querySelector('t-filter');
 
-	<t-filter filter-api="filter.json" exclude-groups='["CabinType","FareType","FlightDuration","DepartureTime","ArrivalTime"]'>
-		
-	</t-filter>
+    document.querySelector('iron-ajax').addEventListener('response', function(args) {
+        filterComp.data = args.detail.response.filters;
+    });
+
+    filterComp.customFiltersHash.push(textFilter);
+    </script>
+
 </body>

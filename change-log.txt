@@ -1,0 +1,16 @@
+removed
+	iron ajax
+	exclude filters
+	search filter
+	header bar
+	_cachedFilters - now private
+	_currency - now private
+	
+
+added
+	custom element api
+
+
+todo
+	stdize additional info usage for app logic and display stuff
+	remove rating support as a move toward genrzation

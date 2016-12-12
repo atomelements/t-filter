@@ -14,7 +14,17 @@
             "label": "End Date",
             "value": null
         }]
-    },     
+    },
+     {
+        "category": "Locations",
+        "type": "AutoSuggest",
+        "label": "Custom",
+        "items": [{
+            "name": "Location",
+            "label": "Locations",
+            "value": null            
+        }]
+    },
     {
       "category": "Price",
       "type": "Range",
