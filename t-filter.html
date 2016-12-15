@@ -191,8 +191,8 @@
         background: var(--grey-three, #bbbbbb);
     }
     
-    :host::content #checkboxLabel {
-        padding-left: 20px!important;
+    ::content #checkboxLabel {
+        padding-left: 20px;
         line-height: 18px;
         color: var(--primary-text-color, #333333);
     }
@@ -207,13 +207,13 @@
         color: var(--grey-three, #bbbbbb);
         font-size: var(--font-14, 14px);
     }
-    /*new styling */
+    /*new styling 
     
     .layout.item.style-scope.t-filter {
-        float: left !important;
-        width: calc((100% - 120px) / 4) !important;
-        max-width: calc((100% - 120px) / 4) !important;
-        min-width: calc((100% - 120px) / 4) !important;
+        float: left ;
+        width: calc((100% - 120px) / 4) ;
+        max-width: calc((100% - 120px) / 4) ;
+        min-width: calc((100% - 120px) / 4) ;
         max-height: 280px;
         overflow-x: auto;
     }
@@ -223,22 +223,22 @@
     }
     
     .category.noclick-header {
-        pointer-events: none !important;
+        pointer-events: none ;
     }
     
     .displayMobile {
-        display: none !important;
+        display: none ;
     }
     
     .filterApply {
-        float: right !important;
+        float: right ;
         margin-top: 220px;
     }
     
     @media (max-width: 800px) {
         .layout.item.style-scope.t-filter {
-            width: calc((100% - 60px) / 3) !important;
-            max-width: calc((100% - 60px) / 3) !important;
+            width: calc((100% - 60px) / 3) ;
+            max-width: calc((100% - 60px) / 3) ;
             max-height: 280px;
             min-height: 280px;
             overflow-x: auto;
@@ -247,25 +247,25 @@
     
     @media (max-width: 600px) {
         .layout.item.style-scope.t-filter {
-            width: calc(100% - 20px) !important;
-            max-width: calc(100% - 20px) !important;
+            width: calc(100% - 20px) ;
+            max-width: calc(100% - 20px) ;
             min-height: 0px;
             max-height: 100%;
         }
         .filterApply {
-            float: right !important;
+            float: right ;
             margin-top: 20px;
         }
         .secondary-text {
             display: block;
         }
         .category.noclick-header {
-            pointer-events: auto !important;
+            pointer-events: auto ;
         }
         .displayMobile {
-            display: block !important;
+            display: block ;
         }
-    }
+    }*/
     </style>
     <template>
         <div class="modal layout vertical" id="filterModal" hidden="{{hide}}">
@@ -727,7 +727,7 @@ Polymer({
         }
     },
 
-    _getCustomHash(category, type) {
+    _getCustomHash: function(category, type) {
         if (this.customFiltersHash && this.customFiltersHash.length && category && type) {
             var cFilter = this.customFiltersHash.find(function(data) {
                 return data.category == category && data.type == type

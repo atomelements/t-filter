@@ -15,17 +15,23 @@
     <div class="demo-canvas">
     </div>
     <t-filter  ></t-filter>
-    <iron-ajax auto id="call" url="custom-filter.json" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json">
+    <iron-ajax  id="call" url="custom-filter.json" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json">
     </iron-ajax>
 
     <script type="text/javascript">
-    var filterComp = document.querySelector('t-filter');
+     window.addEventListener('WebComponentsReady', function(e) { 
+        var filterComp = document.querySelector('t-filter'),
+        ajax = document.querySelector('#call');
 
-    document.querySelector('iron-ajax').addEventListener('response', function(args) {
-        filterComp.data = args.detail.response.filters;
+        document.querySelector('iron-ajax').addEventListener('response', function(args) {
+            filterComp.data = args.detail.response.filters;
+        });
+
+        ajax.generateRequest();
+
+        filterComp.customFiltersHash.push(textFilter);
+
     });
-
-    filterComp.customFiltersHash.push(textFilter);
     </script>
 
 </body>
