@@ -49,6 +49,15 @@
       "label": "Brand",
       "items": [
         {
+          "name": "All",
+          "label": "All",
+          "value": null,
+          "additionalInfo": [
+          {
+            "key": "IsAll",
+            "value": "true"
+          }]         
+        },{
           "name": "17",
           "label": "Best Western",
           "value": null          

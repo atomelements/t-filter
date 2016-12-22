@@ -285,7 +285,7 @@
                                                 <template is="dom-repeat" items="[[key.items]]" as="item">
                                                     <div class="layout horizontal" hidden$="[[_hideFilterByCount(item.additionalInfo)]]">
                                                         <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
-                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
+                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged" data-name$="[[item.name]]">
                                                                 <div class="layout horizontal center justified">
                                                                     <div>[[item.label]]</div>
                                                                     <span class="display-value">[[_getDisplayValue(item)]]</span>
@@ -505,7 +505,34 @@ Polymer({
      */
     _filtersAddedOrRemoved: function(e) {
         if (this.data) {
-            this.data = this._applyInclusions(this.data)
+            this.data = this._applyInclusions(this.data);
+
+            var $this = this;
+            this.async(function() {
+                $this.data.forEach(function(fItem) {
+                    if (fItem.type.toLowerCase() == 'options') {
+                        if (fItem.items) {
+                            var isAllPresent = false;
+                            fItem.items.forEach(function(oItem) {                                
+                                if (oItem.additionalInfo && isAllPresent == false) {
+                                    oItem.additionalInfo.forEach(function(aItem) {
+                                        if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
+                                            aItem.value && aItem.value.toLowerCase() == 'true') {
+                                            
+                                            var cbk = $this.$$('[data-name="' + oItem.name + '"][data-category="' + fItem.category + '"][data-type="' + fItem.type + '"]');
+                                            if (cbk) {
+                                                cbk.checked = true;
+                                                isAllPresent = true;                                                
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+
+                    }
+                });
+            }, 350); //delay to render html
         }
     },
 
@@ -556,8 +583,8 @@ Polymer({
                     break;
                 case 't-range':
                     if (name.toLowerCase() == 'range') {
-                        element.from = element.min;
-                        element.to = element.max;
+                        element.from = element.min.toString();
+                        element.to = element.max.toString();
                     }
 
                     break;
@@ -614,7 +641,7 @@ Polymer({
             filters = filters.concat(component._getAppliedFilter(filter));
         });
         this._setAppliedFilters(filters);
-        setTimeout(function() {            
+        setTimeout(function() {
             component.fire('filter-change', {
                 "filters": component.appliedFilters,
                 "count": component._cachedFilters.length
@@ -665,13 +692,17 @@ Polymer({
                 break;
             default:
                 var cHash = this._getCustomHash(filter.category, filter.type);
-                var lastChange = this._cachedFilters.find(function(data){
+                var lastChange = this._cachedFilters.find(function(data) {
                     return data.category == filter.category && data.type == filter.type;
                 })
                 if (cHash) {
                     var data = cHash.getAppliedFilter(cHash.filterElem, filter, lastChange);
-                    if(data){
-                        filters.push(data);
+                    if (data) {
+                        if (Array.isArray(data)) {
+                            filters = filters.concat(data)
+                        } else {
+                            filters.push(data);
+                        }
                     }
                 }
         }
@@ -742,7 +773,7 @@ Polymer({
         if (cHash) {
             cHash.filterElem = e.srcElement; //back field
             cHash.addHtml(e.srcElement, e.detail.filter, function(changeData) {
-                
+
                 component.$.applyfilters.disabled = false;
 
                 component._cachedFilters = component._cachedFilters.filter(function(filter) {
@@ -844,7 +875,7 @@ Polymer({
         var type = target.getAttribute("data-type");
         this.$.applyfilters.disabled = false;
         this._cachedFilters = this._cachedFilters.filter(function(data) {
-            var cIndex = data.element? data.element.getAttribute('data-index') : undefined;
+            var cIndex = data.element ? data.element.getAttribute('data-index') : undefined;
             return data.category != category || elementIndex !== cIndex;
         });
 

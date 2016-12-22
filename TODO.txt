@@ -1,0 +1,6 @@
+All option checkbox
+	Basic support for 'All' - DONE
+	Disable / enable other options when 'ALL' selected
+
+
+Row wise data
