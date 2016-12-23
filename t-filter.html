@@ -370,7 +370,7 @@
                                     </div>
                                 </template>
                             </template>
-                            <template is="dom-if" if="[[index]]">
+                            <template is="dom-if" if="[[_addRow(index)]]">
                                 <div class="rowSeparator"></div>
                             </template>
                         </template>
@@ -777,6 +777,10 @@ Polymer({
         } else {
             return item.displayValue;
         }
+    },
+
+    _addRow: function(index){
+        return this._data && this._data.length> 1 && (index +1) <  this._data.length;
     },
 
     _getCustomHash: function(category, type) {
