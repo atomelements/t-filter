@@ -1,0 +1,75 @@
+{
+    "filters": [
+        [{
+            "category": "DateRange",
+            "type": "DateRange",
+            "label": "Travel Dates",
+            "items": [{
+                "name": "StartDate",
+                "label": "Start Date",
+                "value": null
+            }, {
+                "name": "EndDate",
+                "label": "End Date",
+                "value": null
+            }]
+        }, {
+            "category": "Locations",
+            "type": "AutoSuggest",
+            "label": "Custom",
+            "items": [{
+                "name": "Location",
+                "label": "Locations",
+                "value": null
+            }]
+        }],
+        [
+
+
+            {
+                "category": "Price",
+                "type": "Range",
+                "label": "Price",
+                "items": [{
+                    "name": "Min",
+                    "label": "Minimum Price",
+                    "value": "35.65"
+                }, {
+                    "name": "Max",
+                    "label": "Maximum Price",
+                    "value": "2138.32"
+                }]
+            },
+
+            {
+                "category": "Brand",
+                "type": "Options",
+                "label": "Brand",
+                "items": [{
+                    "name": "All",
+                    "label": "All",
+                    "value": null,
+                    "additionalInfo": [{
+                        "key": "IsAll",
+                        "value": "true"
+                    }]
+                }, {
+                    "name": "17",
+                    "label": "Best Western",
+                    "value": null
+                }, {
+                    "name": "115",
+                    "label": "Radisson",
+                    "value": null
+                }, {
+                    "name": "320",
+                    "label": "Luxury Collection",
+                    "value": null
+                }]
+            }
+        ]
+    ],
+    "status": {
+        "isSuccessful": true
+    }
+}

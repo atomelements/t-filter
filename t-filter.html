@@ -272,101 +272,106 @@
             <div class="layout vertical mainBody">
                 <div id="controller" class="layout vertical flex">
                     <div class="flex scrollsection">
-                        <template is="dom-repeat" items="[[data]]" as="key">
-                            <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
-                                <div class="layout item">
-                                    <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
-                                        <div class="flex label">[[key.label]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
-                                    </div>
-                                    <iron-collapse opened="[[!hideFilters]]" id="[[key.category]]" data-label$="[[key.label]]">
-                                        <div class="filter-block">
-                                            <template is="dom-if" if="[[_isNotRating(key.category)]]">
-                                                <template is="dom-repeat" items="[[key.items]]" as="item">
-                                                    <div class="layout horizontal" hidden$="[[_hideFilterByCount(item.additionalInfo)]]">
-                                                        <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
-                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged" data-name$="[[item.name]]">
-                                                                <div class="layout horizontal center justified">
-                                                                    <div>[[item.label]]</div>
-                                                                    <span class="display-value">[[_getDisplayValue(item)]]</span>
+                        <template is="dom-repeat" items="[[_data]]" as="row">
+                            <template is="dom-repeat" items="[[row]]" as="key">
+                                <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
+                                    <div class="layout item">
+                                        <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
+                                            <div class="flex label">[[key.label]]</div>
+                                            <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                        </div>
+                                        <iron-collapse opened="[[!hideFilters]]" id="[[key.category]]" data-label$="[[key.label]]">
+                                            <div class="filter-block">
+                                                <template is="dom-if" if="[[_isNotRating(key.category)]]">
+                                                    <template is="dom-repeat" items="[[key.items]]" as="item">
+                                                        <div class="layout horizontal" hidden$="[[_hideFilterByCount(item.additionalInfo)]]">
+                                                            <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
+                                                                <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged" data-name$="[[item.name]]">
+                                                                    <div class="layout horizontal center justified">
+                                                                        <div>[[item.label]]</div>
+                                                                        <span class="display-value">[[_getDisplayValue(item)]]</span>
+                                                                    </div>
+                                                                </t-checkbox>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                                <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
+                                                    <template is="dom-repeat" items="[[key.items]]" as="item">
+                                                        <div class="layout item-layout justified style-scope t-component-panel">
+                                                            <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
+                                                                <div class="layout horizontal center font-12 justified">
+                                                                    <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
+                                                                    <div class="display-value">
+                                                                        [[_getDisplayValue(item)]]
+                                                                    </div>
                                                                 </div>
                                                             </t-checkbox>
                                                         </div>
-                                                    </div>
+                                                    </template>
                                                 </template>
-                                            </template>
-                                            <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
-                                                <template is="dom-repeat" items="[[key.items]]" as="item">
-                                                    <div class="layout item-layout justified style-scope t-component-panel">
-                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
-                                                            <div class="layout horizontal center font-12 justified">
-                                                                <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
-                                                                <div class="display-value">
-                                                                    [[_getDisplayValue(item)]]
-                                                                </div>
-                                                            </div>
-                                                        </t-checkbox>
-                                                    </div>
-                                                </template>
-                                            </template>
-                                        </div>
-                                    </iron-collapse>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_isTypeMatching(key,'Range')}}">
-                                <div class="layout item">
-                                    <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                            </div>
+                                        </iron-collapse>
                                     </div>
-                                    <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse1">
-                                        <div class="filter-block">
-                                            <template is="dom-repeat" items="[[key.items]]" as="range" index-as="i">
-                                                <template is="dom-if" if="[[_isEven(i)]]">
-                                                    <div class="range-block">
-                                                        <t-range label="[[range.label]]" data-index$="[[i]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged" margin="1"></t-range>
-                                                    </div>
+                                </template>
+                                <template is="dom-if" if="{{_isTypeMatching(key,'Range')}}">
+                                    <div class="layout item">
+                                        <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
+                                            <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                            <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                        </div>
+                                        <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse1">
+                                            <div class="filter-block">
+                                                <template is="dom-repeat" items="[[key.items]]" as="range" index-as="i">
+                                                    <template is="dom-if" if="[[_isEven(i)]]">
+                                                        <div class="range-block">
+                                                            <t-range label="[[range.label]]" data-index$="[[i]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged" margin="1"></t-range>
+                                                        </div>
+                                                    </template>
                                                 </template>
-                                            </template>
-                                        </div>
-                                    </iron-collapse>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_isTypeMatching(key,'DateRange')}}">
-                                <div class="layout item">
-                                    <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                            </div>
+                                        </iron-collapse>
                                     </div>
-                                    <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
-                                        <div class="filter-block">
-                                            <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
-                                                <template is="dom-if" if="[[_isEven(i)]]">
-                                                    <div class="layout horizontal">
-                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minStartDate]]">
-                                                        </t-calendar>
-                                                        &nbsp; &nbsp; &nbsp;
-                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minEndDate]]">
-                                                        </t-calendar>
-                                                    </div>
+                                </template>
+                                <template is="dom-if" if="{{_isTypeMatching(key,'DateRange')}}">
+                                    <div class="layout item">
+                                        <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
+                                            <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                            <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                        </div>
+                                        <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
+                                            <div class="filter-block">
+                                                <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
+                                                    <template is="dom-if" if="[[_isEven(i)]]">
+                                                        <div class="layout horizontal">
+                                                            <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minStartDate]]">
+                                                            </t-calendar>
+                                                            &nbsp; &nbsp; &nbsp;
+                                                            <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minEndDate]]">
+                                                            </t-calendar>
+                                                        </div>
+                                                    </template>
                                                 </template>
-                                            </template>
-                                        </div>
-                                    </iron-collapse>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{!_isFilterTypeSupported(key)}}">
-                                <div class="layout item">
-                                    <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
-                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                            </div>
+                                        </iron-collapse>
                                     </div>
-                                    <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
-                                        <div class="filter-block">
-                                            <t-customfilter filter-data="{{key}}" on-t-customfilter-ready="_runCustomHashReady"></t-customfilter>
+                                </template>
+                                <template is="dom-if" if="{{!_isFilterTypeSupported(key)}}">
+                                    <div class="layout item">
+                                        <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
+                                            <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                            <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                         </div>
-                                    </iron-collapse>
-                                </div>
+                                        <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
+                                            <div class="filter-block">
+                                                <t-customfilter filter-data="{{key}}" on-t-customfilter-ready="_runCustomHashReady"></t-customfilter>
+                                            </div>
+                                        </iron-collapse>
+                                    </div>
+                                </template>
+                            </template>
+                            <template is="dom-if" if="[[index]]">
+                                <div class="rowSeparator"></div>
                             </template>
                         </template>
                         <!--- filter apply and cancel button -->
@@ -458,6 +463,13 @@ Polymer({
         },
 
 
+        _data: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
 
         /*
         TODO: Remove all below ones and expose extension for all in-built filters
@@ -486,6 +498,7 @@ Polymer({
             type: Boolean,
             value: false
         }
+
     },
 
     observers: [
@@ -505,7 +518,13 @@ Polymer({
      */
     _filtersAddedOrRemoved: function(e) {
         if (this.data) {
-            this.data = this._applyInclusions(this.data);
+            var dataToApply = this._applyInclusions(this.data);
+
+            if(dataToApply && dataToApply.length && Array.isArray(dataToApply[0]) == false){
+                dataToApply = [dataToApply];
+            }
+
+            this._data = dataToApply;
 
             var $this = this;
             this.async(function() {
