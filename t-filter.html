@@ -520,7 +520,7 @@ Polymer({
         if (this.data) {
             var dataToApply = this._applyInclusions(this.data);
 
-            if(dataToApply && dataToApply.length && Array.isArray(dataToApply[0]) == false){
+            if (dataToApply && dataToApply.length && Array.isArray(dataToApply[0]) == false) {
                 dataToApply = [dataToApply];
             }
 
@@ -528,28 +528,30 @@ Polymer({
 
             var $this = this;
             this.async(function() {
-                $this.data.forEach(function(fItem) {
-                    if (['options', 'rating'].indexOf(fItem.type.toLowerCase()) != -1 ) {
-                        if (fItem.items) {
-                            var isAllPresent = false;
-                            fItem.items.forEach(function(oItem) {                                
-                                if (oItem.additionalInfo && isAllPresent == false) {
-                                    oItem.additionalInfo.forEach(function(aItem) {
-                                        if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
-                                            aItem.value && aItem.value.toLowerCase() == 'true') {
-                                            
-                                            var cbk = Polymer.dom($this.root).querySelector('[data-name="' + oItem.name + '"][data-category="' + fItem.category + '"][data-type="' + fItem.type + '"]');
-                                            if (cbk) {
-                                                cbk.checked = true;   //TODO: Should check API response whether to select element or not
-                                                isAllPresent = true;                                                
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                        }
+                $this._data.forEach(function(row) {
+                    row.forEach(function(fItem) {
+                        if (['options', 'rating'].indexOf(fItem.type.toLowerCase()) != -1) {
+                            if (fItem.items) {
+                                var isAllPresent = false;
+                                fItem.items.forEach(function(oItem) {
+                                    if (oItem.additionalInfo && isAllPresent == false) {
+                                        oItem.additionalInfo.forEach(function(aItem) {
+                                            if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
+                                                aItem.value && aItem.value.toLowerCase() == 'true') {
 
-                    }
+                                                var cbk = Polymer.dom($this.root).querySelector('[data-name="' + oItem.name + '"][data-category="' + fItem.category + '"][data-type="' + fItem.type + '"]');
+                                                if (cbk) {
+                                                    cbk.checked = true; //TODO: Should check API response whether to select element or not
+                                                    isAllPresent = true;
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+
+                        }
+                    });
                 });
             }, 350); //delay to render html
         }
@@ -855,19 +857,18 @@ Polymer({
             };
 
             //all option stuff
-            if(instance.additionalInfo){
+            if (instance.additionalInfo) {
                 var $this = this;
-                instance.additionalInfo.forEach(function(aItem){
+                instance.additionalInfo.forEach(function(aItem) {
                     if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
-                                            aItem.value && aItem.value.toLowerCase() == 'true'){
+                        aItem.value && aItem.value.toLowerCase() == 'true') {
                         var chkBoxList = Polymer.dom($this.root).querySelectorAll('[data-category="' + category + '"][data-type="' + type + '"]:not([data-name="' + instance.name + '"])');
-                        if(chkBoxList){
-                            chkBoxList.forEach(function(chkBox){
-                                if(e.currentTarget.checked){
+                        if (chkBoxList) {
+                            chkBoxList.forEach(function(chkBox) {
+                                if (e.currentTarget.checked) {
                                     chkBox.checked = false;
                                     chkBox.disabled = true;
-                                }
-                                else{
+                                } else {
                                     chkBox.checked = false;
                                     chkBox.disabled = false;
                                 }
