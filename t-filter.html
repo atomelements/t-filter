@@ -510,7 +510,7 @@ Polymer({
             var $this = this;
             this.async(function() {
                 $this.data.forEach(function(fItem) {
-                    if (fItem.type.toLowerCase() == 'options') {
+                    if (['options', 'rating'].indexOf(fItem.type.toLowerCase()) != -1 ) {
                         if (fItem.items) {
                             var isAllPresent = false;
                             fItem.items.forEach(function(oItem) {                                
@@ -519,9 +519,9 @@ Polymer({
                                         if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
                                             aItem.value && aItem.value.toLowerCase() == 'true') {
                                             
-                                            var cbk = $this.$$('[data-name="' + oItem.name + '"][data-category="' + fItem.category + '"][data-type="' + fItem.type + '"]');
+                                            var cbk = Polymer.dom($this.root).querySelector('[data-name="' + oItem.name + '"][data-category="' + fItem.category + '"][data-type="' + fItem.type + '"]');
                                             if (cbk) {
-                                                cbk.checked = true;
+                                                cbk.checked = true;   //TODO: Should check API response whether to select element or not
                                                 isAllPresent = true;                                                
                                             }
                                         }
@@ -694,7 +694,7 @@ Polymer({
                 var cHash = this._getCustomHash(filter.category, filter.type);
                 var lastChange = this._cachedFilters.find(function(data) {
                     return data.category == filter.category && data.type == filter.type;
-                })
+                });
                 if (cHash) {
                     var data = cHash.getAppliedFilter(cHash.filterElem, filter, lastChange);
                     if (data) {
@@ -833,6 +833,30 @@ Polymer({
                         return false;
                     return true;
                 });
+            };
+
+            //all option stuff
+            if(instance.additionalInfo){
+                var $this = this;
+                instance.additionalInfo.forEach(function(aItem){
+                    if (aItem.key && aItem.key.toLowerCase() == 'isall' &&
+                                            aItem.value && aItem.value.toLowerCase() == 'true'){
+                        var chkBoxList = Polymer.dom($this.root).querySelectorAll('[data-category="' + category + '"][data-type="' + type + '"]:not([data-name="' + instance.name + '"])');
+                        if(chkBoxList){
+                            chkBoxList.forEach(function(chkBox){
+                                if(e.currentTarget.checked){
+                                    chkBox.checked = false;
+                                    chkBox.disabled = true;
+                                }
+                                else{
+                                    chkBox.checked = false;
+                                    chkBox.disabled = false;
+                                }
+                            })
+                        }
+
+                    }
+                })
             }
         }
     },
