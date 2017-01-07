@@ -90,6 +90,8 @@
         font-size: var(--filter-label-font-size, 16px);
         border-bottom: 1px solid;
         border-color: var(--input-border-color, #eeeeee);
+        
+        @apply(--filter-category);
     }
     
     .category iron-icon {
@@ -173,7 +175,7 @@
         font-size: var(--font-14, 14px);
     }
     
-    t-range::content .label,
+    t-range::content .label-form,
     ::content .display-value,
     .secondary-text {
         color: var(--grey-three, #bbbbbb);
@@ -194,13 +196,21 @@
             min-width: 150px;
             max-width: 20%;
             border-right: 1px solid var(--input-border-color, rgba(0,0,0,0.54));
+            max-height: 220px;
+            overflow: hidden;
+            @apply(--layout-vertical);
+            @apply(--filter-block-item);
         }
         .scrollsection .item.lastItem{
             border-right: 0;
         }
-        .category {
+        .scrollsection .category {
             pointer-events: none;
             border-bottom: 0;
+            display: block;
+        }
+        .item iron-collapse{
+            overflow: auto;
         }
         .category iron-icon{
             display: none;
@@ -224,7 +234,7 @@
                         <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
                             <div class$="{{_isLastItem(row,index)}} layout item">
                                 <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
-                                    <div class="flex label">[[key.label]]</div>
+                                    <div class="flex label-form">[[key.label]]</div>
                                     <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                 </div>
                                 <iron-collapse opened="[[!hideFilters]]" id="[[key.category]]" data-label$="[[key.label]]">
@@ -264,7 +274,7 @@
                         <template is="dom-if" if="{{_isTypeMatching(key,'Range')}}">
                             <div class$="{{_isLastItem(row,index)}} layout item">
                                 <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                    <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                    <div class="flex label-form">[[_getDisplayLabel(key)]]</div>
                                     <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                 </div>
                                 <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse1">
@@ -283,7 +293,7 @@
                         <template is="dom-if" if="{{_isTypeMatching(key,'DateRange')}}">
                             <div class$="{{_isLastItem(row,index)}} layout item">
                                 <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                    <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                    <div class="flex label-form">[[_getDisplayLabel(key)]]</div>
                                     <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                 </div>
                                 <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
@@ -306,7 +316,7 @@
                         <template is="dom-if" if="{{!_isFilterTypeSupported(key)}}">
                             <div class$="{{_isLastItem(row,index)}} layout item">
                                 <div class="category layout horizontal center noclick-header" data-category$="[[key.category]]" on-click="_toggle">
-                                    <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                    <div class="flex label-form">[[_getDisplayLabel(key)]]</div>
                                     <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
                                 </div>
                                 <iron-collapse opened="[[!hideFilters]]" id="Iron-collapse2">
