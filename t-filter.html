@@ -612,8 +612,9 @@ Polymer({
         this._cachedFilters = this._cachedFilters.filter(function(filter, index) {
             return false;
         });
+
         setTimeout(function() {
-            component._applyFilters();
+            component._applyFilters(null, true);
         }, 0);
     },
 
@@ -632,7 +633,7 @@ Polymer({
         }
     },
 
-    _applyFilters: function(e) {
+    _applyFilters: function(e, isReset) {
         if (e) {
             if (e.target.id == 'applyfilters' && e.target.disabled) {
                 return;
@@ -646,10 +647,17 @@ Polymer({
         });
         this._setAppliedFilters(filters);
         setTimeout(function() {
-            component.fire('filter-change', {
-                "filters": component.appliedFilters,
-                "count": component._cachedFilters.length
-            });
+            if(!isReset){
+                component.fire('filter-change', {
+                    "filters": component.appliedFilters,
+                    "count": component._cachedFilters.length
+                });
+            }else{
+                component.fire('filter-reset', {
+                    "filters": component.appliedFilters,
+                    "count": component._cachedFilters.length
+                });
+            }
         }, 0);
     },
 
