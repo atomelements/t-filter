@@ -783,8 +783,9 @@ Polymer({
         var component = this
         var cHash = this._getCustomHash(e.detail.filter.category, e.detail.filter.type);
         if (cHash) {
-            cHash.filterElem = e.srcElement; //back field
-            cHash.addHtml(e.srcElement, e.detail.filter, function(changeData) {
+          var target = e.target || e.srcElement;
+            cHash.filterElem = target; //back field
+            cHash.addHtml(target, e.detail.filter, function(changeData) {
 
                 component.$.applyfilters.disabled = false;
 
